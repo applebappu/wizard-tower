@@ -31,29 +31,10 @@ Map = {
 			noise_map[i] = {}
 			self.map_table[i] = {}
 			for j = 1, self.board_size.y do
-				noise_map[i][j] = math.floor(10 * ( love.math.noise(i + math.random(), j + math.random()) ) ) + 1
+				noise_map[i][j] = math.floor(10 * ( love.math.noise( i + math.random(), j + math.random() ) ) ) + 1
 				self.map_table[i][j] = map_pieces.tiles[noise_map[i][j]]
 			end
 		end
-	end,
-
-	DoCollision = function(self)
-		local coll = {}
-		for i = 1, self.board_size.x do
-			coll[i] = {}
-			for j = 1, self.board_size.y do
-				local c = coll[i][j]
-				local m = self.map_table[i][j]
-				if m == "." then
-					c = 0
-				elseif m == "#" then
-					c = 1
-				elseif m == ">" then
-					c = 2
-				end
-			end
-		end
-		return coll
 	end,
 
 	InfuseElements = function(self, f, e, wa, wd, m, a)
@@ -67,14 +48,13 @@ Map = {
 	end,
 
 	DrawMap = function(self)
-		love.graphics.setColor(255,255,255)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
-				for k,v in pairs(resources.spawn_table) do
-					if i ~= v.position.x or j ~= v.position.y then
-						love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
-					end
+				if self.map_table[i][j] == 1 then
+					love.graphics.setColor(1,1,1) -- why isn't this working?
 				end
+				love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
+				love.graphics.setColor(255,255,255)
 			end
 		end
 	end,
@@ -97,6 +77,10 @@ Map = {
 			love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
 			love.graphics.setColor(255,255,255)
 		end
+	end,
+
+	DrawGUI = function(self)
+		love.graphics.print("HP: "..Player.hp_current.."/"..Player.hp_max, m.tile_size, (m.board_size.y + 2) * m.tile_size)
 	end,
 
 	PrintElements = function(self)

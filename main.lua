@@ -51,8 +51,7 @@ end
 function love.draw()
 	m:DrawMap()
 	m:DrawMobs()	
-	
-	love.graphics.print("HP: "..Player.hp_current.."/"..Player.hp_max, m.tile_size, (m.board_size.y + 2) * m.tile_size)
+	m:DrawGUI()
 end
 
 function love.update(dt)
