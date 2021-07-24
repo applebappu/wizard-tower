@@ -2,7 +2,9 @@ Entity = require "classes.Entity"
 Map = require "classes.Map"
 Vector2 = require "classes.Vector2"
 
+item_db = require "modules.item_db"
 map_pieces = require "modules.map_pieces"
+mob_db = require "modules.mob_db"
 resources = require "modules.resources"
 time = require "modules.time"
 tools = require "modules.tools"
@@ -10,17 +12,16 @@ tools = require "modules.tools"
 tools.setFont()
 tools.setRandomSeed()
 
-m = Map.New(38,20,0,0,0,0,0,0)
+m = Map.New(38,20,10,10,10,10,10,10)
 m:RandomMap() 
 
-Player = Entity.New("Player",5,5,"@",10,"fire",1)
-Player:Spawn()
+mob_db.Player:Spawn()
+mob_db.Player.entity_type = "Player"
 
-slime = Entity.New("slime",math.random(1,38),math.random(1,20),"s",2,"air",2)
-slime:Spawn()
+mob_db.fire_slime:Spawn()
+mob_db.earth_slime:Spawn()
 
-slime2 = Entity.New("slime2",math.random(1,38),math.random(1,20),"s",2,"earth",2)
-slime2:Spawn()
+item_db.sword:Spawn()
 
 function love.keyreleased(k)
 	if k == "escape" then
@@ -28,35 +29,47 @@ function love.keyreleased(k)
 	end
 
 	if k == "kp5" then -- wait
-		Player:Move(0, 0)
+		mob_db.Player:Move(0, 0)
 	elseif k == "kp4" then -- move west
-		Player:Move(-1, 0)
+		mob_db.Player:Move(-1, 0)
 	elseif k == "kp6" then -- move east
-		Player:Move(1, 0)
+		mob_db.Player:Move(1, 0)
 	elseif k == "kp8" then -- move north
-		Player:Move(0, -1)
+		mob_db.Player:Move(0, -1)
 	elseif k == "kp2" then -- move south
-		Player:Move(0, 1)
+		mob_db.Player:Move(0, 1)
 	elseif k == "kp1" then -- move SW
-		Player:Move(-1, 1)
+		mob_db.Player:Move(-1, 1)
 	elseif k == "kp7" then -- move NW
-		Player:Move(-1, -1)
+		mob_db.Player:Move(-1, -1)
 	elseif k == "kp9" then -- move NE
-		Player:Move(1, -1)
+		mob_db.Player:Move(1, -1)
 	elseif k == "kp3" then -- move SE
-		Player:Move(1, 1)
+		mob_db.Player:Move(1, 1)
+	end
+
+	if k == "g" then
+		-- pick up item at current position
+		mob_db.Player:Pickup()
+	elseif k == "i" then
+		-- view inventory
 	end
 end
 
 function love.draw()
 	m:DrawMap()
-	m:DrawMobs()	
+	m:DrawItems()
+	m:DrawMobs()
 	m:DrawGUI()
 end
 
 function love.update(dt)
+	if item_db.sword.myTurn then
+		item_db.sword:Move(0,0)
+	end
+
 	for k,v in pairs(resources.spawn_table) do
-		if v.myTurn and v.name ~= "Player" then
+		if v.myTurn and v.entity_type == "mob" then
 			v:Wander()
 		end
 	end

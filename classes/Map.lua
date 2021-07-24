@@ -50,8 +50,8 @@ Map = {
 	DrawMap = function(self)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
-				if self.map_table[i][j] == 1 then
-					love.graphics.setColor(1,1,1) -- why isn't this working?
+				if self.map_table[i][j] == "." then
+					love.graphics.setColor(10,10,10) -- why isn't this working?
 				end
 				love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
 				love.graphics.setColor(255,255,255)
@@ -61,26 +61,37 @@ Map = {
 
 	DrawMobs = function(self)
 		for k,v in pairs(resources.spawn_table) do
-			if v.element == "fire" then
-				love.graphics.setColor(255,0,0)
-			elseif v.element == "water" then
-				love.graphics.setColor(0,0,255)
-			elseif v.element == "wood" then
-				love.graphics.setColor(200,200,40)
-			elseif v.element == "metal" then
-				love.graphics.setColor(200,200,200)
-			elseif v.element == "earth" then
-				love.graphics.setColor(0,255,0)
-			elseif v.element == "air" then
-				love.graphics.setColor(0,255,255)
+			if v.entity_type == "mob" or v.entity_type == "Player" then
+				if v.element == "fire" then
+					love.graphics.setColor(255,0,0)
+				elseif v.element == "water" then
+					love.graphics.setColor(0,0,255)
+				elseif v.element == "wood" then
+					love.graphics.setColor(200,200,40)
+				elseif v.element == "metal" then
+					love.graphics.setColor(200,200,200)
+				elseif v.element == "earth" then
+					love.graphics.setColor(0,255,0)
+				elseif v.element == "air" then
+					love.graphics.setColor(0,255,255)
+				end
+				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
 			end
-			love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
-			love.graphics.setColor(255,255,255)
+		end
+	end,
+
+	DrawItems = function(self)
+		for k,v in pairs(resources.spawn_table) do
+			if v.entity_type == "item" then
+				love.graphics.setColor(150,150,150)
+				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
+			end
 		end
 	end,
 
 	DrawGUI = function(self)
-		love.graphics.print("HP: "..Player.hp_current.."/"..Player.hp_max, m.tile_size, (m.board_size.y + 2) * m.tile_size)
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, (m.board_size.y + 2) * m.tile_size)
 	end,
 
 	PrintElements = function(self)

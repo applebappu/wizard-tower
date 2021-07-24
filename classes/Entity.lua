@@ -13,12 +13,15 @@ Entity = {
 			hp_max = hp,
 			turn_timer = 0,
 			myTurn = false,
-			speed = 10,
 			inventory = {},
+			equipment = {},
 			element = elem,
 			elem_amt = elem_amt,
-			damage_val = 1,
-			sight_dist = 10
+			attack = 1,
+			defense = 0,
+			speed = 10,
+			sight_dist = 10,
+			entity_type = nil 
 		}
 		setmetatable(self, Entity)
 		return self
@@ -95,12 +98,14 @@ Entity = {
 		local test_x = self.position.x + dx
 		local test_y = self.position.y + dy
 		local test_value = false
-
+		
 		for k, v in pairs(resources.spawn_table) do
 			if test_x == v.position.x and test_y == v.position.y and v ~= self then
-				print("canMove says Bump!")
-				self:Bump(v)
-				return test_value
+				if v.entity_type == "mob" then
+					print("canMove says Bump!")
+					self:Bump(v)
+					return test_value
+				end
 			end
 		end
 		
@@ -134,13 +139,26 @@ Entity = {
 		self:Move(r1, r2)
 	end,
 
-	Pickup = function(self, target)
-		if self:DistToEntity(target) == 0 then
+	Pickup = function(self)
+		local target = nil
+		for k,v in pairs(resources.spawn_table) do
+			if v.position.x == self.position.x and v.position.y == self.position.y then
+				if v ~= self then
+					target = v
+				end
+			end
+		end
+
+		if target == nil then
+			print("nothing here to pick up")
+		else
 			table.insert(self.inventory, target)
 			target:Die()
-		else
-			print("too far to pick up")
+			print(target.name.." picked up by "..self.name)
 		end
+
+		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
+		self.myTurn = false
 	end,
 
 	Drop = function(self, target)
@@ -156,8 +174,23 @@ Entity = {
 		end
 	end,
 
+	Equip = function(self, item)
+		for k, v in pairs(self.inventory) do
+			if v == item then
+				table.remove(item, k)
+				table.insert(self.equipment)
+			end
+		end
+
+		for k, v in pairs(self.equipment) do
+			self.attack = self.attack + v.attack
+			self.defense = self.defense + v.defense
+			self.speed = self.speed + v.speed
+		end
+	end,
+
 	Bump = function(self, target)
-		target:Harm(self.damage_val)
+		target:Harm(self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
 	end
 }
