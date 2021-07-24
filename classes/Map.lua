@@ -19,7 +19,6 @@ Map = {
 				air = a
 			},
 			map_table = {},
-			collision_layer = {}
 		}
 		setmetatable(m, Map)
 		return m
