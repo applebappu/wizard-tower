@@ -14,8 +14,8 @@ local resources = {
 
 	one_turn = 100,
 
-	board_width = 9,
-	board_height = 9
+	game_state = "main",
+	query_substate = nil
 }
 
 return resources

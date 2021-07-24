@@ -18,6 +18,7 @@ m:RandomMap()
 mob_db.Player:Spawn()
 mob_db.Player.entity_type = "Player"
 
+
 mob_db.fire_slime:Spawn()
 mob_db.earth_slime:Spawn()
 
@@ -25,47 +26,78 @@ item_db.sword:Spawn()
 
 function love.keyreleased(k)
 	if k == "escape" then
-		love.event.quit()
+		if resources.query_substate ~= nil then
+			resources.query_substate = nil
+		elseif resources.game_state == "inventory" then
+			resources.game_state = "main"
+		else
+			love.event.quit()
+		end
 	end
 
-	if k == "kp5" then -- wait
-		mob_db.Player:Move(0, 0)
-	elseif k == "kp4" then -- move west
-		mob_db.Player:Move(-1, 0)
-	elseif k == "kp6" then -- move east
-		mob_db.Player:Move(1, 0)
-	elseif k == "kp8" then -- move north
-		mob_db.Player:Move(0, -1)
-	elseif k == "kp2" then -- move south
-		mob_db.Player:Move(0, 1)
-	elseif k == "kp1" then -- move SW
-		mob_db.Player:Move(-1, 1)
-	elseif k == "kp7" then -- move NW
-		mob_db.Player:Move(-1, -1)
-	elseif k == "kp9" then -- move NE
-		mob_db.Player:Move(1, -1)
-	elseif k == "kp3" then -- move SE
-		mob_db.Player:Move(1, 1)
+	if resources.game_state == "main" then
+		if k == "kp5" then 
+			mob_db.Player:Move(0, 0)
+		elseif k == "kp4" then 
+			mob_db.Player:Move(-1, 0)
+		elseif k == "kp6" then 
+			mob_db.Player:Move(1, 0)
+		elseif k == "kp8" then 
+			mob_db.Player:Move(0, -1)
+		elseif k == "kp2" then 
+			mob_db.Player:Move(0, 1)
+		elseif k == "kp1" then 
+			mob_db.Player:Move(-1, 1)
+		elseif k == "kp7" then 
+			mob_db.Player:Move(-1, -1)
+		elseif k == "kp9" then 
+			mob_db.Player:Move(1, -1)
+		elseif k == "kp3" then 
+			mob_db.Player:Move(1, 1)
+		end
+	
+		if k == "g" then
+			mob_db.Player:Pickup()
+		elseif k == "i" then
+			resources.game_state = "inventory"
+		end
 	end
 
-	if k == "g" then
-		-- pick up item at current position
-		mob_db.Player:Pickup()
-	elseif k == "i" then
-		-- view inventory
+	if resources.game_state == "inventory" then
+		if k == "e" and resources.query_substate == nil then
+			resources.query_substate = "equip"
+		elseif k == "d" and resources.query_substate == nil then
+			resources.query_substate = "drop"
+		end
 	end
+
+	--[[ freezes the program
+	if resources.game_state == "inventory" and resources.query_substate == "equip" then
+		local choice = io.read(1)
+		mob_db.Player:Equip(choice)
+	end]]
 end
 
 function love.draw()
-	m:DrawMap()
-	m:DrawItems()
-	m:DrawMobs()
-	m:DrawGUI()
+	if resources.game_state == "main" then
+		m:DrawMap()
+		m:DrawItems()
+		m:DrawMobs()
+		m:DrawGUI()
+	elseif resources.game_state == "inventory" then
+		mob_db.Player:DrawInventory()
+		mob_db.Player:DrawEquipment()
+		if resources.query_substate == "equip" then
+			mob_db.Player:EquipmentQuery()
+		elseif resources.query_substate == "drop" then
+			mob_db.Player:DropQuery()
+		end
+	end
 end
 
 function love.update(dt)
 	if item_db.sword.myTurn then
-		item_db.sword:Move(0,0)
+		item_db.sword:Rest()
 	end
 
 	for k,v in pairs(resources.spawn_table) do

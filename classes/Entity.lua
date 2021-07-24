@@ -21,7 +21,8 @@ Entity = {
 			defense = 0,
 			speed = 10,
 			sight_dist = 10,
-			entity_type = nil 
+			entity_type = nil,
+			equip_type = nil
 		}
 		setmetatable(self, Entity)
 		return self
@@ -49,6 +50,10 @@ Entity = {
 				
 				for k,v in pairs(m.elemental_balance) do
 					print(k,v)
+				end
+
+				for k,v in pairs(self.inventory) do
+					Drop("all")
 				end
 			end
 		end
@@ -162,25 +167,33 @@ Entity = {
 	end,
 
 	Drop = function(self, target)
-		for k, v in pairs(self.inventory) do
-			if v == target then
-				table.remove(target, k)
+		if target == "all" then
+			for k,v in pairs(self.inventory) do
+				table.remove(v, k)
 				target.position = {
 					x = self.position.x,
 					y = self.position.y
 				}
-				target:Spawn()
+				v:Spawn()
+			end
+		else
+			for k, v in pairs(self.inventory) do
+				if v == target then
+					table.remove(target, k)
+					target.position = {
+						x = self.position.x,
+						y = self.position.y
+					}
+					target:Spawn()
+				end
 			end
 		end
 	end,
 
-	Equip = function(self, item)
-		for k, v in pairs(self.inventory) do
-			if v == item then
-				table.remove(item, k)
-				table.insert(self.equipment)
-			end
-		end
+	Equip = function(self, item_num)
+		local item = self.inventory[item_num]
+		table.remove(self.inventory, item_num)
+		table.insert(self.equipment, item)
 
 		for k, v in pairs(self.equipment) do
 			self.attack = self.attack + v.attack
@@ -192,6 +205,40 @@ Entity = {
 	Bump = function(self, target)
 		target:Harm(self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
+	end,
+
+	DrawInventory = function(self)
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("Inventory:", m.tile_size, m.tile_size)
+		for k,v in ipairs(self.inventory) do
+			love.graphics.print(k.." - ", m.tile_size, (k + 1) * m.tile_size)
+			love.graphics.print(self.inventory[k].name, 4 * m.tile_size, (k + 1) * m.tile_size)
+		end
+	end,
+
+	DrawEquipment = function(self)
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("Equipment:", 20 * m.tile_size, m.tile_size)
+		for k,v in ipairs(self.equipment) do
+			love.graphics.print(k.." - ", 20 * m.tile_size, (k + 1) * m.tile_size)
+			love.graphics.print(self.equipment[k].name, 24 * m.tile_size, (k + 1) * m.tile_size)
+		end
+	end,
+	
+	EquipmentQuery = function(self)
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("Equip which item?", m.tile_size, 20 * m.tile_size)
+	end,
+
+	DropQuery = function(self)
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("Drop which item?", m.tile_size, 20 * m.tile_size)
+	end,
+
+	Rest = function(self)
+		self.turn_timer = self.turn_timer + (resources.one_turn)
+		self.myTurn = false
+		print(self.name.." rests")
 	end
 }
 

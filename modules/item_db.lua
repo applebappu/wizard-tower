@@ -9,4 +9,6 @@ for k,v in pairs(item_db) do
 	v.myTurn = true
 end
 
+item_db.sword.equip_type = "weapon"
+
 return item_db
