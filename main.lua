@@ -18,11 +18,19 @@ m:RandomMap()
 mob_db.Player:Spawn()
 mob_db.Player.entity_type = "Player"
 
-
 mob_db.fire_slime:Spawn()
 mob_db.earth_slime:Spawn()
 
 item_db.sword:Spawn()
+item_db.sword.position.x = mob_db.Player.position.x
+item_db.sword.position.y = mob_db.Player.position.y
+
+item_db.hat:Spawn()
+item_db.mace:Spawn()
+item_db.hat.position.x = mob_db.Player.position.x
+item_db.hat.position.y = mob_db.Player.position.y
+item_db.mace.position.x = mob_db.Player.position.x
+item_db.mace.position.y = mob_db.Player.position.y
 
 function love.keyreleased(k)
 	if k == "escape" then
@@ -66,16 +74,39 @@ function love.keyreleased(k)
 	if resources.game_state == "inventory" then
 		if k == "e" and resources.query_substate == nil then
 			resources.query_substate = "equip"
+		elseif k == "u" and resources.query_substate == nil then
+			resources.query_substate = "unequip"
 		elseif k == "d" and resources.query_substate == nil then
 			resources.query_substate = "drop"
 		end
 	end
-
-	--[[ freezes the program
+	
+	-- this code here is for equipping and unequipping and it's a hot mess
 	if resources.game_state == "inventory" and resources.query_substate == "equip" then
-		local choice = io.read(1)
-		mob_db.Player:Equip(choice)
-	end]]
+		local b = mob_db.Player
+		if k == "1" then
+			local a = 1
+			b:Equip(b.inventory[a])
+		elseif k == "2" then
+			local a = 2
+			b:Equip(b.inventory[a])
+		elseif k == "3" then
+			local a = 3
+			b:Equip(b.inventory[a])
+		end
+	elseif resources.game_state == "inventory" and resources.query_substate == "unequip" then
+		local b = mob_db.Player
+		if k == "1" then
+			local a = 1
+			b:Unequip(b.equipment[a])
+		elseif k == "2" then
+			local a = 2
+			b:Unequip(b.equipment[a])
+		elseif k == "3" then
+			local a = 3
+			b:Unequip(b.equipment[a])
+		end
+	end
 end
 
 function love.draw()
@@ -91,6 +122,8 @@ function love.draw()
 			mob_db.Player:EquipmentQuery()
 		elseif resources.query_substate == "drop" then
 			mob_db.Player:DropQuery()
+		elseif resources.query_substate == "unequip" then
+			mob_db.Player:UnequipQuery()
 		end
 	end
 end

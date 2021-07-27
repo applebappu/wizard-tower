@@ -22,7 +22,8 @@ Entity = {
 			speed = 10,
 			sight_dist = 10,
 			entity_type = nil,
-			equip_type = nil
+			equip_type = nil,
+			was_equipped = false
 		}
 		setmetatable(self, Entity)
 		return self
@@ -190,16 +191,42 @@ Entity = {
 		end
 	end,
 
-	Equip = function(self, item_num)
-		local item = self.inventory[item_num]
-		table.remove(self.inventory, item_num)
-		table.insert(self.equipment, item)
-
-		for k, v in pairs(self.equipment) do
-			self.attack = self.attack + v.attack
-			self.defense = self.defense + v.defense
-			self.speed = self.speed + v.speed
+	Equip = function(self, item)
+		print("Equip beginning")
+		for k,v in pairs(self.inventory) do
+			if v == item then
+				print("Equipping "..v.name)
+				table.insert(self.equipment, v)
+				table.remove(self.inventory, k)
+				print("Equip is adding stats")
+				print("pre-equip stats: "..self.attack..", "..self.defense..", "..self.speed)
+				self.attack = self.attack + v.attack
+				self.defense = self.defense + v.defense
+				self.speed = self.speed + v.speed
+				print("post-equip: "..self.attack..", "..self.defense..", "..self.speed)
+			end
 		end
+		resources.query_substate = nil
+		print("Equip ended")
+	end,
+
+	Unequip = function(self, item)
+		print("Unequip beginning")
+		for k,v in pairs(self.equipment) do
+			if v == item then
+				print("Unequipping "..v.name)
+				table.insert(self.inventory, v)
+				table.remove(self.equipment, k)
+				print("Unequip is subtracting stats")
+				print("pre-unequip stats: "..self.attack..", "..self.defense..", "..self.speed)
+				self.attack = self.attack - v.attack
+				self.defense = self.defense - v.defense
+				self.speed = self.speed - v.speed
+				print("post-unequip: "..self.attack..", "..self.defense..", "..self.speed)
+			end
+		end
+		resources.query_substate = nil
+		print("Unequip ended")
 	end,
 
 	Bump = function(self, target)
@@ -228,6 +255,11 @@ Entity = {
 	EquipmentQuery = function(self)
 		love.graphics.setColor(255,255,255)
 		love.graphics.print("Equip which item?", m.tile_size, 20 * m.tile_size)
+	end,
+
+	UnequipQuery = function(self)
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("Unequip which item?", m.tile_size, 20 * m.tile_size)
 	end,
 
 	DropQuery = function(self)
