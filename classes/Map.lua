@@ -26,12 +26,37 @@ Map = {
 
 	RandomMap = function(self)
 		local noise_map = {}
+		local up_stairs = {
+			x = math.random(2,36),
+			y = math.random(2,18)
+		}
+		local down_stairs = {
+			x = math.random(2,36),
+			y = math.random(2,18)
+		}
+		
 		for i = 1, self.board_size.x do
 			noise_map[i] = {}
 			self.map_table[i] = {}
 			for j = 1, self.board_size.y do
 				noise_map[i][j] = math.floor(10 * ( love.math.noise( i + math.random(), j + math.random() ) ) ) + 1
 				self.map_table[i][j] = map_pieces.tiles[noise_map[i][j]]
+
+				if i == 1 or j == 1 then
+					self.map_table[i][j] = "#"
+				end
+
+				if i == self.board_size.x or j == self.board_size.y then
+					self.map_table[i][j] = "#"
+				end
+
+				if i == up_stairs.x and j == up_stairs.y then
+					self.map_table[i][j] = "<"
+				end
+
+				if i == down_stairs.x and j == down_stairs.y then
+					self.map_table[i][j] = ">"
+				end
 			end
 		end
 	end,
@@ -49,33 +74,27 @@ Map = {
 	DrawMap = function(self)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
-				if self.map_table[i][j] == "." then
-					love.graphics.setColor(10,10,10) -- why isn't this working?
-				end
 				love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
-				love.graphics.setColor(255,255,255)
 			end
 		end
 	end,
 
 	DrawMobs = function(self)
 		for k,v in pairs(resources.spawn_table) do
-			if v.entity_type == "mob" or v.entity_type == "Player" then
-				if v.element == "fire" then
-					love.graphics.setColor(255,0,0)
-				elseif v.element == "water" then
-					love.graphics.setColor(0,0,255)
-				elseif v.element == "wood" then
-					love.graphics.setColor(200,200,40)
-				elseif v.element == "metal" then
-					love.graphics.setColor(200,200,200)
-				elseif v.element == "earth" then
-					love.graphics.setColor(0,255,0)
-				elseif v.element == "air" then
-					love.graphics.setColor(0,255,255)
-				end
-				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
+			if v.element == "fire" then
+				love.graphics.setColor(255,0,0)
+			elseif v.element == "water" then
+				love.graphics.setColor(0,0,255)
+			elseif v.element == "wood" then
+				love.graphics.setColor(200,200,40)
+			elseif v.element == "metal" then
+				love.graphics.setColor(200,200,200)
+			elseif v.element == "earth" then
+				love.graphics.setColor(0,255,0)
+			elseif v.element == "air" then
+				love.graphics.setColor(0,255,255)
 			end
+			love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
 		end
 	end,
 

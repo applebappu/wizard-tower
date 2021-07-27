@@ -22,8 +22,14 @@ Entity = {
 			speed = 10,
 			sight_dist = 10,
 			entity_type = nil,
-			equip_type = nil,
-			was_equipped = false
+			elemental_balance = {
+				fire = 0,
+				earth = 0,
+				water = 0,
+				wood = 0,
+				metal = 0,
+				air = 0
+			}
 		}
 		setmetatable(self, Entity)
 		return self
@@ -31,6 +37,17 @@ Entity = {
 
 	Spawn = function(self)
 		table.insert(resources.spawn_table, self)
+		
+		local f = self.elemental_balance.fire
+		local e = self.elemental_balance.earth
+		local wa = self.elemental_balance.water
+		local wd = self.elemental_balance.wood
+		local me = self.elemental_balance.metal
+		local a = self.elemental_balance.air
+
+		m:InfuseElements(-f,-e,-wa,-wd,-me,-a)
+
+		m.map_table[self.position.x][self.position.y] = "."
 	end,
 
 	Die = function(self)
@@ -236,7 +253,7 @@ Entity = {
 
 	DrawInventory = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Inventory:", m.tile_size, m.tile_size)
+		love.graphics.print("Spellbook:", m.tile_size, m.tile_size)
 		for k,v in ipairs(self.inventory) do
 			love.graphics.print(k.." - ", m.tile_size, (k + 1) * m.tile_size)
 			love.graphics.print(self.inventory[k].name, 4 * m.tile_size, (k + 1) * m.tile_size)
@@ -245,7 +262,7 @@ Entity = {
 
 	DrawEquipment = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Equipment:", 20 * m.tile_size, m.tile_size)
+		love.graphics.print("Memorized Glyphs:", 20 * m.tile_size, m.tile_size)
 		for k,v in ipairs(self.equipment) do
 			love.graphics.print(k.." - ", 20 * m.tile_size, (k + 1) * m.tile_size)
 			love.graphics.print(self.equipment[k].name, 24 * m.tile_size, (k + 1) * m.tile_size)
@@ -271,6 +288,10 @@ Entity = {
 		self.turn_timer = self.turn_timer + (resources.one_turn)
 		self.myTurn = false
 		print(self.name.." rests")
+	end,
+
+	ChangeElements = function(self, f, e, wa, wd, m, a)
+
 	end
 }
 

@@ -21,16 +21,7 @@ mob_db.Player.entity_type = "Player"
 mob_db.fire_slime:Spawn()
 mob_db.earth_slime:Spawn()
 
-item_db.sword:Spawn()
-item_db.sword.position.x = mob_db.Player.position.x
-item_db.sword.position.y = mob_db.Player.position.y
-
-item_db.hat:Spawn()
-item_db.mace:Spawn()
-item_db.hat.position.x = mob_db.Player.position.x
-item_db.hat.position.y = mob_db.Player.position.y
-item_db.mace.position.x = mob_db.Player.position.x
-item_db.mace.position.y = mob_db.Player.position.y
+item_db.fire_glyph:Spawn()
 
 function love.keyreleased(k)
 	if k == "escape" then
@@ -94,6 +85,7 @@ function love.keyreleased(k)
 			local a = 3
 			b:Equip(b.inventory[a])
 		end
+
 	elseif resources.game_state == "inventory" and resources.query_substate == "unequip" then
 		local b = mob_db.Player
 		if k == "1" then
@@ -129,13 +121,11 @@ function love.draw()
 end
 
 function love.update(dt)
-	if item_db.sword.myTurn then
-		item_db.sword:Rest()
-	end
-
 	for k,v in pairs(resources.spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
 			v:Wander()
+		elseif v.myTurn and v.entity_type == "item" then
+			v:Rest()
 		end
 	end
 
