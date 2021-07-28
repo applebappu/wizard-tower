@@ -12,6 +12,11 @@ local time = {
 				end
 			end
 		end
+	end,
+
+	spawner = function()
+		local elem = m.elemental_balance
+		
 	end
 }
 

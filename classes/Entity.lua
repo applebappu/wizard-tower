@@ -3,12 +3,12 @@ resources = require "modules.resources"
 Entity = {
 	New = function(name, x, y, char, hp, elem, elem_amt)
 		local self = {
-			name = name,
+			name = name or "Alex",
 			position = {
-				x = x,
-				y = y
+				x = x or math.random(2,37),
+				y = y or math.random(2,19)
 			},
-			char = char,
+			char = char or "s",
 			hp_current = hp,
 			hp_max = hp,
 			turn_timer = 0,
@@ -38,15 +38,16 @@ Entity = {
 	Spawn = function(self)
 		table.insert(resources.spawn_table, self)
 		
-		local f = self.elemental_balance.fire
-		local e = self.elemental_balance.earth
-		local wa = self.elemental_balance.water
-		local wd = self.elemental_balance.wood
-		local me = self.elemental_balance.metal
-		local a = self.elemental_balance.air
+		local s = self.elemental_balance
+		local f = s.fire
+		local e = s.earth
+		local wa = s.water
+		local wd = s.wood
+		local me = s.metal
+		local a = s.air
 
 		m:InfuseElements(-f,-e,-wa,-wd,-me,-a)
-
+		
 		m.map_table[self.position.x][self.position.y] = "."
 	end,
 
@@ -269,21 +270,6 @@ Entity = {
 		end
 	end,
 	
-	EquipmentQuery = function(self)
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Equip which item?", m.tile_size, 20 * m.tile_size)
-	end,
-
-	UnequipQuery = function(self)
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Unequip which item?", m.tile_size, 20 * m.tile_size)
-	end,
-
-	DropQuery = function(self)
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Drop which item?", m.tile_size, 20 * m.tile_size)
-	end,
-
 	Rest = function(self)
 		self.turn_timer = self.turn_timer + (resources.one_turn)
 		self.myTurn = false

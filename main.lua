@@ -18,10 +18,16 @@ m:RandomMap()
 mob_db.Player:Spawn()
 mob_db.Player.entity_type = "Player"
 
-mob_db.fire_slime:Spawn()
-mob_db.earth_slime:Spawn()
+fire_slime1 = tools.CopyTable(mob_db.fire_slime)
 
-item_db.fire_glyph:Spawn()
+for k,v in pairs(fire_slime1) do
+	print(k, v)
+	if type(v) == "table" then
+		for i,j in pairs(v) do
+			print(i, j)
+		end
+	end
+end
 
 function love.keyreleased(k)
 	if k == "escape" then
@@ -111,11 +117,11 @@ function love.draw()
 		mob_db.Player:DrawInventory()
 		mob_db.Player:DrawEquipment()
 		if resources.query_substate == "equip" then
-			mob_db.Player:EquipmentQuery()
+			tools.EquipmentQuery()
 		elseif resources.query_substate == "drop" then
-			mob_db.Player:DropQuery()
+			tools.DropQuery()
 		elseif resources.query_substate == "unequip" then
-			mob_db.Player:UnequipQuery()
+			tools.UnequipQuery()
 		end
 	end
 end
