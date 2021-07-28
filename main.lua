@@ -18,15 +18,6 @@ m:RandomMap()
 mob_db.Player:Spawn()
 mob_db.Player.entity_type = "Player"
 
-for k,v in pairs(mob_db.air_slime) do
-	print(k, v)
-	if type(v) == "table" then
-		for i,j in pairs(v) do
-			print(i, j)
-		end
-	end
-end
-
 function love.keyreleased(k)
 	if k == "escape" then
 		if resources.query_substate ~= nil then
@@ -76,7 +67,6 @@ function love.keyreleased(k)
 		end
 	end
 	
-	-- this code here is for equipping and unequipping and it's a hot mess
 	if resources.game_state == "inventory" and resources.query_substate == "equip" then
 		local b = mob_db.Player
 		if k == "1" then
