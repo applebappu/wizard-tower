@@ -1,39 +1,32 @@
 resources = require "modules.resources"
 
 Entity = {
-	New = function(name, x, y, char, hp, elem, elem_amt)
-		local self = {
-			name = name or "Alex",
-			position = {
-				x = x or math.random(2,37),
-				y = y or math.random(2,19)
-			},
-			char = char or "s",
-			hp_current = hp,
-			hp_max = hp,
-			turn_timer = 0,
-			myTurn = false,
-			inventory = {},
-			equipment = {},
-			element = elem,
-			elem_amt = elem_amt,
-			attack = 1,
-			defense = 0,
-			speed = 10,
-			sight_dist = 10,
-			entity_type = nil,
-			elemental_balance = {
-				fire = 0,
-				earth = 0,
-				water = 0,
-				wood = 0,
-				metal = 0,
-				air = 0
-			}
-		}
-		setmetatable(self, Entity)
-		return self
-	end,
+	name = "Alex",
+	position = {
+		x = math.random(2,37),
+		y = math.random(2,19)
+	},
+	char = "s",
+	hp_current = 10,
+	hp_max = 10,
+	turn_timer = 0,
+	myTurn = false,
+	inventory = {},
+	equipment = {},
+	element = "air",
+	attack = 1,
+	defense = 0,
+	speed = 10,
+	sight_dist = 10,
+	entity_type = nil,
+	elemental_balance = {
+		fire = 0,
+		earth = 0,
+		water = 0,
+		wood = 0,
+		metal = 0,
+		air = 0
+	},
 
 	Spawn = function(self)
 		table.insert(resources.spawn_table, self)

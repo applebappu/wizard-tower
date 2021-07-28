@@ -36,7 +36,11 @@ local tools = {
 			if type(v) == 'function' then
 				new_table[k] = tools.CloneFunction(v)
 			elseif type(v) == 'table' then
-				new_table[k] = tools.CopyTable(v)
+				local sub_table = {}
+				for i,j in pairs(v) do
+					sub_table[i] = j
+				end
+				new_table[k] = sub_table
 			else
 				new_table[k] = v
 			end

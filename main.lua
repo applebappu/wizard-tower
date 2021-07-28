@@ -18,9 +18,7 @@ m:RandomMap()
 mob_db.Player:Spawn()
 mob_db.Player.entity_type = "Player"
 
-fire_slime1 = tools.CopyTable(mob_db.fire_slime)
-
-for k,v in pairs(fire_slime1) do
+for k,v in pairs(mob_db.air_slime) do
 	print(k, v)
 	if type(v) == "table" then
 		for i,j in pairs(v) do
