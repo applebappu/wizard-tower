@@ -2,6 +2,7 @@ Entity = require "classes.Entity"
 Map = require "classes.Map"
 Vector2 = require "classes.Vector2"
 
+bresenham = require "modules.bresenham"
 item_db = require "modules.item_db"
 map_pieces = require "modules.map_pieces"
 mob_db = require "modules.mob_db"
@@ -99,7 +100,7 @@ function love.draw()
 	if resources.game_state == "main" then
 		m:DrawMap()
 		m:DrawItems()
-		m:DrawMobs()
+		tools.DrawMobs()
 		m:DrawGUI()
 	elseif resources.game_state == "inventory" then
 		mob_db.Player:DrawInventory()

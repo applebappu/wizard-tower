@@ -82,6 +82,25 @@ local tools = {
 	DropQuery = function(self)
 		love.graphics.setColor(255,255,255)
 		love.graphics.print("Drop which item?", m.tile_size, 20 * m.tile_size)
+	end,
+
+	DrawMobs = function(self)
+		for k,v in pairs(resources.spawn_table) do
+			if v.element == "fire" then
+				love.graphics.setColor(255,0,0)
+			elseif v.element == "water" then
+				love.graphics.setColor(0,0,255)
+			elseif v.element == "wood" then
+				love.graphics.setColor(200,200,40)
+			elseif v.element == "metal" then
+				love.graphics.setColor(200,200,200)
+			elseif v.element == "earth" then
+				love.graphics.setColor(0,255,0)
+			elseif v.element == "air" then
+				love.graphics.setColor(0,255,255)
+			end
+			love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
+		end
 	end
 }
 return tools

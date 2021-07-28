@@ -1,4 +1,6 @@
 Entity = require "classes.Entity"
+
+bresenham = require "modules.bresenham"
 resources = require "modules.resources"
 map_pieces = require "modules.map_pieces"
 
@@ -74,27 +76,10 @@ Map = {
 	DrawMap = function(self)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
-				love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
+				if mob_db.Player:DistToPoint(i, j) <= mob_db.Player.sight_dist then
+					love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
+				end
 			end
-		end
-	end,
-
-	DrawMobs = function(self)
-		for k,v in pairs(resources.spawn_table) do
-			if v.element == "fire" then
-				love.graphics.setColor(255,0,0)
-			elseif v.element == "water" then
-				love.graphics.setColor(0,0,255)
-			elseif v.element == "wood" then
-				love.graphics.setColor(200,200,40)
-			elseif v.element == "metal" then
-				love.graphics.setColor(200,200,200)
-			elseif v.element == "earth" then
-				love.graphics.setColor(0,255,0)
-			elseif v.element == "air" then
-				love.graphics.setColor(0,255,255)
-			end
-			love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
 		end
 	end,
 

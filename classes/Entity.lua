@@ -1,3 +1,4 @@
+bresenham = require "modules.bresenham"
 resources = require "modules.resources"
 
 Entity = {
@@ -129,8 +130,9 @@ Entity = {
 		if test_x < 1 or test_x > m.board_size.x then 
 			return test_value
 		end
-
-		if m.map_table[test_x][test_y] == "." then
+		
+		local test = m.map_table[test_x][test_y]
+		if test == "." or test == "<" or test == ">" then
 			test_value = true
 		end
 
