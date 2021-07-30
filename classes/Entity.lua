@@ -2,14 +2,14 @@ bresenham = require "modules.bresenham"
 resources = require "modules.resources"
 
 Entity = {
-	name = "Alex",
+	name = "no name",
 	position = {
 		x = math.random(2,37),
 		y = math.random(2,19)
 	},
-	char = "s",
-	hp_current = 10,
-	hp_max = 10,
+	char = "@",
+	hp_current = 1,
+	hp_max = 1,
 	turn_timer = 0,
 	myTurn = false,
 	inventory = {},
@@ -18,7 +18,7 @@ Entity = {
 	attack = 1,
 	defense = 0,
 	speed = 10,
-	sight_dist = 10,
+	sight_dist = 3,
 	entity_type = nil,
 	elemental_balance = {
 		fire = 0,
@@ -51,16 +51,9 @@ Entity = {
 				table.remove(resources.spawn_table, k)
 				resources.souls = resources.souls + 1
 
-				local a = self.elem_amt
+				local a = self.elemental_balance
+				m:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
 
-				if self.element == "fire" then m:InfuseElements(a,0,0,0,0,0)
-				elseif self.element == "water" then m:InfuseElements(0,0,a,0,0,0)
-				elseif self.element == "wood" then m:InfuseElements(0,0,0,a,0,0)
-				elseif self.element == "metal" then m:InfuseElements(0,0,0,0,a,0)
-				elseif self.element == "earth" then m:InfuseElements(0,a,0,0,0,0)
-				elseif self.element == "air" then m:InfuseElements(0,0,0,0,0,a)
-				end
-				
 				for k,v in pairs(m.elemental_balance) do
 					print(k,v)
 				end
@@ -170,10 +163,12 @@ Entity = {
 
 		if target == nil then
 			print("nothing here to pick up")
-		else
+		elseif #self.inventory < 6 then
 			table.insert(self.inventory, target)
 			target:Die()
 			print(target.name.." picked up by "..self.name)
+		else
+			print(self.name.." inventory full")
 		end
 
 		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
@@ -272,7 +267,33 @@ Entity = {
 	end,
 
 	ChangeElements = function(self, f, e, wa, wd, m, a)
+		local s = self.elemental_balance
 
+		s.fire = s.fire + f
+		s.earth = s.earth + e
+		s.water = s.water + wa
+		s.wood = s.wood + wd
+		s.metal = s.metal + m
+		s.air = s.air + a
+	end,
+
+	RaycastSight = function(self, rays)
+		local r = self.sight_dist
+
+		local coll = function(x, y)
+			if m.map_table[x][y] == "#" then
+				return true
+			else
+				return false
+			end
+		end
+		
+		for i = 0, 360, (360/rays) do
+			local theta = (i * step * math.pi) / 180
+			local targetx = r * math.cos(theta)
+			local targety = r * math.sin(theta)
+			bresenham.line(self.position.x, self.position.y, targetx, targety, coll)
+		end
 	end
 }
 

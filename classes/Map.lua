@@ -258,8 +258,9 @@ Map = {
 		end
 		
 		self:InfuseElements(0, -counter, -counter, 0, 0, 0)
-	end
+	end,
 	-- DC End --
+
 }
 
 Map.__index = Map

@@ -1,6 +1,5 @@
 local bresenham = {
-
-	line = function(x0, y0, x1, y1, callback)
+	line = function(x0, y0, x1, y1)
 		local dx, dy, sx, sy
 		
 		if x0 < x1 then
@@ -20,10 +19,7 @@ local bresenham = {
 		end
 
 		local err, e2 = dx - dy, nil
-
-		if not callback(x0, y0) then
-			return false
-		end
+		local content = {}
 
 		while not (x0 == x1 and y0 == y1) do
 			e2 = err + err
@@ -38,9 +34,7 @@ local bresenham = {
 				y0 = y0 + sy
 			end
 
-			if not callback(x0, y0) then
-				return false
-			end
+			table.insert(content, m.map_table[x0][y0])
 		end
 
 		return true

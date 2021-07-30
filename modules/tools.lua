@@ -69,22 +69,22 @@ local tools = {
 		return cloned
 	end,
 
-	EquipmentQuery = function(self)
+	EquipmentQuery = function()
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Equip which item?", m.tile_size, 20 * m.tile_size)
+		love.graphics.print("Equip which glyph?", m.tile_size, 20 * m.tile_size)
 	end,
 
-	UnequipQuery = function(self)
+	UnequipQuery = function()
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Unequip which item?", m.tile_size, 20 * m.tile_size)
+		love.graphics.print("Unequip which glyph?", m.tile_size, 20 * m.tile_size)
 	end,
 
-	DropQuery = function(self)
+	DropQuery = function()
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Drop which item?", m.tile_size, 20 * m.tile_size)
+		love.graphics.print("Drop which glyph?", m.tile_size, 20 * m.tile_size)
 	end,
 
-	DrawMobs = function(self)
+	DrawMobs = function()
 		for k,v in pairs(resources.spawn_table) do
 			if v.element == "fire" then
 				love.graphics.setColor(255,0,0)
@@ -99,8 +99,29 @@ local tools = {
 			elseif v.element == "air" then
 				love.graphics.setColor(0,255,255)
 			end
-			love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
+ 
+			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist then
+				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
+			end
 		end
+	end,
+
+	MakeMobs = function(v, iterations)
+		local mobs = {}
+		
+		for i = 1, iterations do
+			mobs[i] = tools.CopyTable(v)
+		end
+		for i = 1, #mobs do
+			mobs[i]:Spawn()
+		end
+	end,
+
+	ElementalSpawn = function()
+		if m.elemental_balance.fire > 10 then
+
+		end 
 	end
 }
+
 return tools

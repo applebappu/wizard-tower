@@ -17,7 +17,8 @@ m = Map.New(38,20,10,10,10,10,10,10)
 m:RandomMap() 
 
 mob_db.Player:Spawn()
-mob_db.Player.entity_type = "Player"
+
+m:PrintElements()
 
 function love.keyreleased(k)
 	if k == "escape" then
@@ -79,6 +80,15 @@ function love.keyreleased(k)
 		elseif k == "3" then
 			local a = 3
 			b:Equip(b.inventory[a])
+		elseif k == "4" then
+			local a = 4
+			b:Equip(b.inventory[a])
+		elseif k == "5" then
+			local a = 5
+			b:Equip(b.inventory[a])
+		elseif k == "6" then
+			local a = 6
+			b:Equip(b.inventory[a])
 		end
 
 	elseif resources.game_state == "inventory" and resources.query_substate == "unequip" then
@@ -92,6 +102,15 @@ function love.keyreleased(k)
 		elseif k == "3" then
 			local a = 3
 			b:Unequip(b.equipment[a])
+		elseif k == "4" then
+			local a = 4
+			b:Unequip(b.inventory[a])
+		elseif k == "5" then
+			local a = 5
+			b:Unequip(b.inventory[a])
+		elseif k == "6" then
+			local a = 6
+			b:Unequip(b.inventory[a])
 		end
 	end
 end
@@ -118,7 +137,11 @@ end
 function love.update(dt)
 	for k,v in pairs(resources.spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
-			v:Wander()
+			if math.random(0,1) >= 0.5 then
+				v:Wander()
+			else
+				v:Rest()
+			end
 		elseif v.myTurn and v.entity_type == "item" then
 			v:Rest()
 		end
