@@ -147,5 +147,6 @@ function love.update(dt)
 		end
 	end
 
-	time.incrementTurns()
+	time.incrementTurns(dt)
+	time.spawner(dt)
 end

@@ -106,11 +106,13 @@ local tools = {
 		end
 	end,
 
-	MakeMobs = function(v, iterations)
+	MakeEntities = function(target, iterations)
 		local mobs = {}
 		
 		for i = 1, iterations do
-			mobs[i] = tools.CopyTable(v)
+			mobs[i] = tools.CopyTable(target)
+			mobs[i].position.x = math.random(2,37)
+			mobs[i].position.y = math.random(2,19)
 		end
 		for i = 1, #mobs do
 			mobs[i]:Spawn()
@@ -118,9 +120,46 @@ local tools = {
 	end,
 
 	ElementalSpawn = function()
-		if m.elemental_balance.fire > 10 then
+		local threshold1 = 5
+		local threshold2 = 10
 
-		end 
+		if m.elemental_balance.fire > threshold1 then
+			tools.MakeEntities(mob_db.fire_slime, m.elemental_balance.fire)
+		elseif m.elemental_balance.fire > threshold2 then
+			tools.MakeEntities(item_db.fire_glyph, m.elemental_balance.fire - threshold2)
+		end
+
+		if m.elemental_balance.earth > threshold1 then
+			tools.MakeEntities(mob_db.earth_slime, m.elemental_balance.earth)
+		elseif m.elemental_balance.earth > threshold2 then
+			tools.MakeEntities(item_db.earth_glyph, m.elemental_balance.earth - threshold2)
+		end
+
+		if m.elemental_balance.water > threshold1 then
+			tools.MakeEntities(mob_db.water_slime, m.elemental_balance.water)
+		elseif m.elemental_balance.water > threshold2 then
+			tools.MakeEntities(item_db.water_glyph, m.elemental_balance.water - threshold2)
+		end
+ 
+		if m.elemental_balance.wood > threshold1 then
+			tools.MakeEntities(mob_db.wood_slime, m.elemental_balance.wood)
+		elseif m.elemental_balance.wood > threshold2 then
+			tools.MakeEntities(item_db.wood_glyph, m.elemental_balance.wood - threshold2)
+		end
+		
+		if m.elemental_balance.metal > threshold1 then
+			tools.MakeEntities(mob_db.metal_slime, m.elemental_balance.metal)
+		elseif m.elemental_balance.metal > threshold2 then
+			tools.MakeEntities(item_db.metal_glyph, m.elemental_balance.metal - threshold2)
+		end
+
+		if m.elemental_balance.air > threshold1 then
+			tools.MakeEntities(mob_db.air_slime, m.elemental_balance.air)
+		elseif m.elemental_balance.air > threshold2 then
+			tools.MakeEntities(item_db.air_glyph, m.elemental_balance.air - threshold2)
+		end
+
+		m:PrintElements()
 	end
 }
 

@@ -15,8 +15,10 @@ local time = {
 	end,
 
 	spawner = function()
-		local elem = m.elemental_balance
-		
+		while resources.global_timer > 20 do
+			tools.ElementalSpawn()
+			resources.global_timer = resources.global_timer - 1
+		end
 	end
 }
 

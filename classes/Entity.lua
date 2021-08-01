@@ -139,6 +139,7 @@ Entity = {
 			self.position.y = self.position.y + dy
 			self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
 			self.myTurn = false
+			resources.global_timer = resources.global_timer + 1
 			print("move complete for "..self.name)
 		elseif self.myTurn then
 			
@@ -173,6 +174,7 @@ Entity = {
 
 		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
 		self.myTurn = false
+		resources.global_timer = resources.global_timer + 1
 	end,
 
 	Drop = function(self, target)
@@ -240,6 +242,9 @@ Entity = {
 	Bump = function(self, target)
 		target:Harm(self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
+		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
+		self.myTurn = false
+		resources.global_timer = resources.global_timer + 1
 	end,
 
 	DrawInventory = function(self)
