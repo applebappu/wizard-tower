@@ -76,7 +76,7 @@ Map = {
 	DrawMap = function(self)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
-				if mob_db.Player:DistToPoint(i, j) <= mob_db.Player.sight_dist then
+				if mob_db.Player:LineOfSight(i, j) then
 					love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
 				end
 			end
@@ -94,7 +94,7 @@ Map = {
 
 	DrawGUI = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, m.tile_size * 20)
+		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, m.tile_size * 22)
 	end,
 
 	PrintElements = function(self)

@@ -249,7 +249,7 @@ Entity = {
 
 	DrawInventory = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Spellbook:", m.tile_size, m.tile_size)
+		love.graphics.print("Inventory:", m.tile_size, m.tile_size)
 		for k,v in ipairs(self.inventory) do
 			love.graphics.print(k.." - ", m.tile_size, (k + 1) * m.tile_size)
 			love.graphics.print(self.inventory[k].name, 4 * m.tile_size, (k + 1) * m.tile_size)
@@ -258,7 +258,7 @@ Entity = {
 
 	DrawEquipment = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Memorized Glyphs:", 20 * m.tile_size, m.tile_size)
+		love.graphics.print("Equipment:", 20 * m.tile_size, m.tile_size)
 		for k,v in ipairs(self.equipment) do
 			love.graphics.print(k.." - ", 20 * m.tile_size, (k + 1) * m.tile_size)
 			love.graphics.print(self.equipment[k].name, 24 * m.tile_size, (k + 1) * m.tile_size)
@@ -282,23 +282,16 @@ Entity = {
 		s.air = s.air + a
 	end,
 
-	RaycastSight = function(self, rays)
-		local r = self.sight_dist
+	LineOfSight = function(self, x, y)
+		local los_table = bresenham.line(self.position.x, self.position.y, x, y)
 
-		local coll = function(x, y)
-			if m.map_table[x][y] == "#" then
-				return true
-			else
+		for i = 1, #los_table do
+			if los_table[i] == "#" then
 				return false
 			end
 		end
 		
-		for i = 0, 360, (360/rays) do
-			local theta = (i * step * math.pi) / 180
-			local targetx = r * math.cos(theta)
-			local targety = r * math.sin(theta)
-			bresenham.line(self.position.x, self.position.y, targetx, targety, coll)
-		end
+		return true
 	end
 }
 

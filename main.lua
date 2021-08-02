@@ -20,8 +20,6 @@ mob_db.Player.position.x = math.random(2,37)
 mob_db.Player.position.y = math.random(2,19)
 mob_db.Player:Spawn()
 
-m:PrintElements()
-
 function love.keyreleased(k)
 	if k == "escape" then
 		if resources.query_substate ~= nil then

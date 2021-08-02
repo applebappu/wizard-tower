@@ -19,7 +19,7 @@ local bresenham = {
 		end
 
 		local err, e2 = dx - dy, nil
-		local content = {}
+		local line_content = {}
 
 		while not (x0 == x1 and y0 == y1) do
 			e2 = err + err
@@ -34,10 +34,9 @@ local bresenham = {
 				y0 = y0 + sy
 			end
 
-			table.insert(content, m.map_table[x0][y0])
+			table.insert(line_content, m.map_table[x0][y0])
 		end
-
-		return true
+		return line_content
 	end
 }
 
