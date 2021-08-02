@@ -111,8 +111,8 @@ local tools = {
 		
 		for i = 1, iterations do
 			mobs[i] = tools.CopyTable(target)
-			mobs[i].position.x = math.random(2,37)
-			mobs[i].position.y = math.random(2,19)
+			mobs[i].position.x = math.random(2,29)
+			mobs[i].position.y = math.random(2,29)
 		end
 		for i = 1, #mobs do
 			mobs[i]:Spawn()

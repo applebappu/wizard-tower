@@ -29,12 +29,12 @@ Map = {
 	RandomMap = function(self)
 		local noise_map = {}
 		local up_stairs = {
-			x = math.random(2,36),
-			y = math.random(2,18)
+			x = math.random(2,37),
+			y = math.random(2,19)
 		}
 		local down_stairs = {
-			x = math.random(2,36),
-			y = math.random(2,18)
+			x = math.random(2,37),
+			y = math.random(2,19)
 		}
 		
 		for i = 1, self.board_size.x do
@@ -94,7 +94,7 @@ Map = {
 
 	DrawGUI = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, (m.board_size.y + 2) * m.tile_size)
+		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, m.tile_size * 20)
 	end,
 
 	PrintElements = function(self)

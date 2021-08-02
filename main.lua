@@ -16,6 +16,8 @@ tools.setRandomSeed()
 m = Map.New(38,20,10,10,10,10,10,10)
 m:RandomMap() 
 
+mob_db.Player.position.x = math.random(2,37)
+mob_db.Player.position.y = math.random(2,19)
 mob_db.Player:Spawn()
 
 m:PrintElements()
