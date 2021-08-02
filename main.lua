@@ -15,6 +15,7 @@ tools.setRandomSeed()
 
 m = Map.New(38,20,10,10,10,10,10,10)
 m:RandomMap() 
+m:MemoryInit()
 
 mob_db.Player.position.x = math.random(2,37)
 mob_db.Player.position.y = math.random(2,19)
@@ -117,6 +118,7 @@ end
 
 function love.draw()
 	if resources.game_state == "main" then
+		m:DrawMapMemory()
 		m:DrawMap()
 		m:DrawItems()
 		tools.DrawMobs()

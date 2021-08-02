@@ -18,7 +18,7 @@ Entity = {
 	attack = 1,
 	defense = 0,
 	speed = 10,
-	sight_dist = 3,
+	sight_dist = 5,
 	entity_type = nil,
 	elemental_balance = {
 		fire = 0,
@@ -284,10 +284,16 @@ Entity = {
 
 	LineOfSight = function(self, x, y)
 		local los_table = bresenham.line(self.position.x, self.position.y, x, y)
+		local onemore = false
 
 		for i = 1, #los_table do
-			if los_table[i] == "#" then
+			if onemore then
+				onemore = false
 				return false
+			else
+				if los_table[i] == "#" then
+					onemore = true
+				end
 			end
 		end
 		

@@ -21,6 +21,7 @@ Map = {
 				air = a
 			},
 			map_table = {},
+			memory = {}
 		}
 		setmetatable(m, Map)
 		return m
@@ -76,9 +77,28 @@ Map = {
 	DrawMap = function(self)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
-				if mob_db.Player:LineOfSight(i, j) then
+				if mob_db.Player:LineOfSight(i, j) and mob_db.Player:DistToPoint(i, j) <= mob_db.Player.sight_dist then
 					love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
+					self.memory[i][j] = self.map_table[i][j]
 				end
+			end
+		end
+	end,
+
+	MemoryInit = function(self)
+		for i = 1, self.board_size.x do
+			self.memory[i] = {}
+			for j = 1, self.board_size.y do
+				self.memory[i][j] = {}
+			end
+		end		
+	end,
+
+	DrawMapMemory = function(self)
+		love.graphics.setColor(25,25,25,10)
+		for i = 1, self.board_size.x do
+			for j = 1, self.board_size.y do
+				love.graphics.print(self.memory[i][j], i * self.tile_size, j * self.tile_size)
 			end
 		end
 	end,
