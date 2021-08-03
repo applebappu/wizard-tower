@@ -41,9 +41,9 @@ Entity = {
 		local me = s.metal
 		local a = s.air
 
-		m:InfuseElements(-f,-e,-wa,-wd,-me,-a)
+		resources.current_map:InfuseElements(-f,-e,-wa,-wd,-me,-a)
 		
-		m.map_table[self.position.x][self.position.y] = "."
+		resources.current_map.map_table[self.position.x][self.position.y] = "."
 	end,
 
 	Die = function(self)
@@ -53,9 +53,9 @@ Entity = {
 				resources.souls = resources.souls + 1
 
 				local a = self.elemental_balance
-				m:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
+				resources.current_map:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
 
-				for k,v in pairs(m.elemental_balance) do
+				for k,v in pairs(resources.current_map.elemental_balance) do
 					print(k,v)
 				end
 
@@ -66,16 +66,11 @@ Entity = {
 		end
 	end,
 
-	Heal = function(self, amount)
+	ChangeHP = function(self, amount)
 		self.hp_current = self.hp_current + amount
 		if self.hp_current > self.hp_max then
 			self.hp_current = self.hp_max
-		end
-	end,
-
-	Harm = function(self, amount)
-		self.hp_current = self.hp_current - amount
-		if self.hp_current <= 0 then
+		elseif self.hp_current <= 0 then
 			self:Die()
 		end
 	end,
@@ -121,11 +116,11 @@ Entity = {
 			end
 		end
 		
-		if test_x < 1 or test_x > m.board_size.x then 
+		if test_x < 1 or test_x > resources.current_map.board_size.x then 
 			return test_value
 		end
 		
-		local test = m.map_table[test_x][test_y]
+		local test = resources.current_map.map_table[test_x][test_y]
 		if test == "#" then
 			test_value = false
 		end
@@ -244,7 +239,7 @@ Entity = {
 	end,
 
 	Bump = function(self, target)
-		target:Harm(self.attack)
+		target:ChangeHP(-self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
 		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
 		self.myTurn = false
@@ -253,19 +248,19 @@ Entity = {
 
 	DrawInventory = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Inventory:", m.tile_size, m.tile_size)
+		love.graphics.print("Inventory:", resources.current_map.tile_size, current_map.tile_size)
 		for k,v in ipairs(self.inventory) do
-			love.graphics.print(k.." - ", m.tile_size, (k + 1) * m.tile_size)
-			love.graphics.print(self.inventory[k].name, 4 * m.tile_size, (k + 1) * m.tile_size)
+			love.graphics.print(k.." - ", resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
+			love.graphics.print(self.inventory[k].name, 4 * resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
 		end
 	end,
 
 	DrawEquipment = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Equipment:", 20 * m.tile_size, m.tile_size)
+		love.graphics.print("Equipment:", 20 * resources.current_map.tile_size, resources.current_map.tile_size)
 		for k,v in ipairs(self.equipment) do
-			love.graphics.print(k.." - ", 20 * m.tile_size, (k + 1) * m.tile_size)
-			love.graphics.print(self.equipment[k].name, 24 * m.tile_size, (k + 1) * m.tile_size)
+			love.graphics.print(k.." - ", 20 * resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
+			love.graphics.print(self.equipment[k].name, 24 * resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
 		end
 	end,
 	

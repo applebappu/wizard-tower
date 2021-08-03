@@ -57,33 +57,55 @@ local tools = {
 	ElementalSpawn = function()
 		local threshold1 = 10
 		local threshold2 = 100
+		local current_map = resources.current_map
 
-		if m.elemental_balance.fire > threshold1 then
-			tools.MakeEntities(mob_db.fire_slime, m.elemental_balance.fire / mob_db.fire_slime.elemental_balance.fire)
-		elseif m.elemental_balance.fire > threshold2 then
+		if current_map.elemental_balance.fire > threshold1 then
+			tools.MakeEntities(mob_db.fire_slime, current_map.elemental_balance.fire / mob_db.fire_slime.elemental_balance.fire)
+		elseif current_map.elemental_balance.fire > threshold2 then
 		end
 
-		if m.elemental_balance.earth > threshold1 then
-			tools.MakeEntities(mob_db.kobold, m.elemental_balance.earth / mob_db.kobold.elemental_balance.earth)
-		elseif m.elemental_balance.earth > threshold2 then
+		if current_map.elemental_balance.earth > threshold1 then
+			tools.MakeEntities(mob_db.kobold, current_map.elemental_balance.earth / mob_db.kobold.elemental_balance.earth)
+		elseif current_map.elemental_balance.earth > threshold2 then
 		end
 
-		if m.elemental_balance.water > threshold1 then
-			tools.MakeEntities(mob_db.water_slime, m.elemental_balance.water / mob_db.water_slime.elemental_balance.water)
-		elseif m.elemental_balance.water > threshold2 then
+		if current_map.elemental_balance.water > threshold1 then
+			tools.MakeEntities(mob_db.water_slime, current_map.elemental_balance.water / mob_db.water_slime.elemental_balance.water)
+		elseif current_map.elemental_balance.water > threshold2 then
 		end
  
-		if m.elemental_balance.wood > threshold1 then
-			tools.MakeEntities(mob_db.wood_slime, m.elemental_balance.wood / mob_db.wood_slime.elemental_balance.wood)
-		elseif m.elemental_balance.wood > threshold2 then
+		if current_map.elemental_balance.wood > threshold1 then
+			tools.MakeEntities(mob_db.wood_slime, current_map.elemental_balance.wood / mob_db.wood_slime.elemental_balance.wood)
+		elseif current_map.elemental_balance.wood > threshold2 then
 		end
 		
-		if m.elemental_balance.metal > threshold1 then
-			tools.MakeEntities(mob_db.metal_slime, m.elemental_balance.metal / mob_db.metal_slime.elemental_balance.metal)
-		elseif m.elemental_balance.metal > threshold2 then
+		if current_map.elemental_balance.metal > threshold1 then
+			tools.MakeEntities(mob_db.metal_slime, current_map.elemental_balance.metal / mob_db.metal_slime.elemental_balance.metal)
+		elseif current_map.elemental_balance.metal > threshold2 then
 		end
 
-		m:PrintElements()
+		current_map:PrintElements()
+	end,
+
+	NewLevel = function()
+		local m = Map.New()
+		local dice = math.random(1,3)
+		if dice == 1 then
+			m:RandomMap("cave")
+		elseif dice == 2 then
+			m:RandomMap("forest")
+		elseif dice == 3 then
+			m:RandomMap("volcano")
+		end
+		m:MemoryInit()
+		resources.current_map = m
+	end,
+
+	TowerLevelInit = function()
+		for i = 1, resources.tower_height do
+			resources.world_spawn_memory[i] = {}
+			resources.world_map_memory[i] = {}
+		end
 	end
 }
 

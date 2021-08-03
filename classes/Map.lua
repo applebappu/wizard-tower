@@ -179,7 +179,7 @@ Map = {
 				end
 			end
 		end
-		m:PrintElements()	
+		resources.current_map:PrintElements()	
 	end
 }
 

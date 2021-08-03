@@ -1,15 +1,12 @@
 local resources = {
 	spawn_table = {},
+	world_spawn_memory = {},
+	
 	current_map = {},
-	elements = {
-		fire = {},
-		wood = {},
-		earth = {},
-		water = {},
-		metal = {},
-		air = {}
-	},
-    
+	tower_level = 1,
+	world_map_memory = {},
+	tower_height = 10,
+
 	souls = 0,
 
 	one_turn = 100,

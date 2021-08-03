@@ -1,6 +1,3 @@
-Entity = require "classes.Entity"
-Map = require "classes.Map"
-
 bresenham = require "modules.bresenham"
 item_db = require "modules.item_db"
 map_pieces = require "modules.map_pieces"
@@ -9,23 +6,16 @@ resources = require "modules.resources"
 time = require "modules.time"
 tools = require "modules.tools"
 
+Entity = require "classes.Entity"
+Map = require "classes.Map"
+
 font = love.graphics.newFont("courier.ttf", 20)
 love.graphics.setFont(font)
 
 math.randomseed(os.time() - (os.clock() * 1000))
 
-m = Map.New()
-
-local dice = math.random(1,3)
-if dice == 1 then
-	m:RandomMap("cave")
-elseif dice == 2 then
-	m:RandomMap("forest")
-elseif dice == 3 then
-	m:RandomMap("volcano")
-end
-
-m:MemoryInit()
+tools.TowerLevelInit()
+tools.NewLevel()
 
 mob_db.Player.position.x = math.random(2,37)
 mob_db.Player.position.y = math.random(2,19)
@@ -67,6 +57,22 @@ function love.keyreleased(k)
 			mob_db.Player:Pickup()
 		elseif k == "i" then
 			resources.game_state = "inventory"
+		end
+
+		if k == "." and resources.current_map.map_table[mob_db.Player.position.x][mob_db.Player.position.y] == ">" then
+			if resources.tower_level == 1 then
+				print("leaving the tower")
+				love.event.quit()
+			else
+				resources.tower_level = resources.tower_level - 1
+				resources.current_map = resources.world_map_memory[resources.tower_level]
+				resources.spawn_table = resources.world_spawn_memory[resources.tower_level]	
+			end
+		elseif k == "," and resources.current_map.map_table[mob_db.Player.position.x][mob_db.Player.position.y] == "<" then
+			resources.world_map_memory[resources.tower_level] = resources.current_map
+			resources.world_spawn_memory[resources.tower_level] = resources.spawn_table
+			resources.tower_level = resources.tower_level + 1
+			tools.NewLevel()
 		end
 	end
 
@@ -128,9 +134,9 @@ end
 
 function love.draw()
 	if resources.game_state == "main" then
-		m:DrawMapMemory()
-		m:DrawMap()
-		m:DrawItems()
+		resources.current_map:DrawMapMemory()
+		resources.current_map:DrawMap()
+		resources.current_map:DrawItems()
 
 		for k,v in pairs(resources.spawn_table) do
 			if v.element == "fire" then
@@ -148,12 +154,12 @@ function love.draw()
 			end
  
 			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist and mob_db.Player:LineOfSight(v.position.x, v.position.y) then
-				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
+				love.graphics.print(v.char, v.position.x * resources.current_map.tile_size, v.position.y * resources.current_map.tile_size)
 			end
 		end
 
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, m.tile_size * 22)
+		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, resources.current_map.tile_size, resources.current_map.tile_size * 22)
 
 	elseif resources.game_state == "inventory" then
 		love.graphics.setColor(255,255,255)
@@ -161,11 +167,11 @@ function love.draw()
 		mob_db.Player:DrawEquipment()
 
 		if resources.query_substate == "equip" then
-			love.graphics.print("Equip which item?", m.tile_size, 20 * m.tile_size)
+			love.graphics.print("Equip which item?", resources.current_map.tile_size, 20 * resources.current_map.tile_size)
 		elseif resources.query_substate == "unequip" then
-			love.graphics.print("Unequip which item?", m.tile_size, 20 * m.tile_size)
+			love.graphics.print("Unequip which item?", resources.current_map.tile_size, 20 * resources.current_map.tile_size)
 		elseif resources.query_substate == "drop" then
-			love.graphics.print("Drop which item?", m.tile_size, 20 * m.tile_size)
+			love.graphics.print("Drop which item?", resources.current_map.tile_size, 20 * resources.current_map.tile_size)
 		end
 	end
 end
@@ -173,7 +179,7 @@ end
 function love.update(dt)
 	for k,v in pairs(resources.spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
-			if math.random(0,1) >= 0.3 then
+			if math.random(0,1) >= 0.25 then
 				v:Wander()
 			else
 				v:Rest()

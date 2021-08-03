@@ -1,3 +1,5 @@
+resources = require "modules.resources"
+
 local time = {
 	IncrementTurns = function()
 		for k,v in pairs(resources.spawn_table) do
@@ -23,7 +25,7 @@ local time = {
 
 	ElementalSeepage = function()
 		while resources.element_timer > 5 do
-			m:TileElements()
+			resources.current_map:TileElements()
 			resources.element_timer = resources.element_timer - 5
 		end
 	end,
