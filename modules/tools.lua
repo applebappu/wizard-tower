@@ -87,17 +87,17 @@ local tools = {
 	DrawMobs = function()
 		for k,v in pairs(resources.spawn_table) do
 			if v.element == "fire" then
-				love.graphics.setColor(255,0,0)
+				love.graphics.setColor(255/255,0/255,0/255)
 			elseif v.element == "water" then
-				love.graphics.setColor(0,0,255)
+				love.graphics.setColor(0/255,0/255,255/255)
 			elseif v.element == "wood" then
-				love.graphics.setColor(200,200,40)
+				love.graphics.setColor(165/255,42/255,42/255)
 			elseif v.element == "metal" then
-				love.graphics.setColor(200,200,200)
+				love.graphics.setColor(201/255,247/255,238/255)
 			elseif v.element == "earth" then
-				love.graphics.setColor(0,255,0)
+				love.graphics.setColor(0/255,255/255,0/255)
 			elseif v.element == "air" then
-				love.graphics.setColor(0,255,255)
+				love.graphics.setColor(0/255,255/255,255/255)
 			end
  
 			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist and mob_db.Player:LineOfSight(v.position.x, v.position.y) then
@@ -111,8 +111,8 @@ local tools = {
 		
 		for i = 1, iterations do
 			mobs[i] = tools.CopyTable(target)
-			mobs[i].position.x = math.random(2,29)
-			mobs[i].position.y = math.random(2,29)
+			mobs[i].position.x = math.random(2,37)
+			mobs[i].position.y = math.random(2,19)
 		end
 		for i = 1, #mobs do
 			mobs[i]:Spawn()
