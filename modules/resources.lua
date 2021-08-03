@@ -13,7 +13,8 @@ local resources = {
 	souls = 0,
 
 	one_turn = 100,
-	global_timer = 0,
+	spawn_timer = 0,
+	element_timer = 0,
 
 	game_state = "main",
 	query_substate = nil

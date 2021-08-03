@@ -1,5 +1,6 @@
 bresenham = require "modules.bresenham"
 resources = require "modules.resources"
+time = require "modules.time"
 
 Entity = {
 	name = "no name",
@@ -137,9 +138,11 @@ Entity = {
 		if t and self.myTurn then
 			self.position.x = self.position.x + dx
 			self.position.y = self.position.y + dy
+
 			self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
 			self.myTurn = false
-			resources.global_timer = resources.global_timer + 1
+
+			time.TimerTick()
 			print("move complete for "..self.name)
 		elseif self.myTurn then
 			
@@ -174,7 +177,7 @@ Entity = {
 
 		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
 		self.myTurn = false
-		resources.global_timer = resources.global_timer + 1
+		time.TimerTick()
 	end,
 
 	Drop = function(self, target)
@@ -199,6 +202,7 @@ Entity = {
 				end
 			end
 		end
+		time.TimerTick()
 	end,
 
 	Equip = function(self, item)
@@ -244,7 +248,7 @@ Entity = {
 		print(target.name .. "'s HP is now "..target.hp_current)
 		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
 		self.myTurn = false
-		resources.global_timer = resources.global_timer + 1
+		time.TimerTick()
 	end,
 
 	DrawInventory = function(self)

@@ -1,5 +1,5 @@
 local time = {
-	incrementTurns = function()
+	IncrementTurns = function()
 		for k,v in pairs(resources.spawn_table) do
 			if v.myTurn == false then
 				v.turn_timer = v.turn_timer - 1
@@ -14,11 +14,23 @@ local time = {
 		end
 	end,
 
-	spawner = function()
-		while resources.global_timer > 20 do
+	Spawner = function()
+		while resources.spawn_timer > 20 do
 			tools.ElementalSpawn()
-			resources.global_timer = resources.global_timer - 1
+			resources.spawn_timer = resources.spawn_timer - 1
 		end
+	end,
+
+	ElementalSeepage = function()
+		while resources.element_timer > 5 do
+			m:TileElements()
+			resources.element_timer = resources.element_timer - 5
+		end
+	end,
+
+	TimerTick = function()
+		resources.spawn_timer = resources.spawn_timer + 1
+		resources.element_timer = resources.element_timer + 1
 	end
 }
 

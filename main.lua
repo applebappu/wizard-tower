@@ -14,8 +14,15 @@ love.graphics.setFont(font)
 
 math.randomseed(os.time() - (os.clock() * 1000))
 
-m = Map.New(38,20,10,10,10,10,10,10)
-m:RandomMap() 
+m = Map.New()
+dice = math.random(1,3)
+if dice == 1 then
+	m:RandomMap("cave")
+elseif dice == 2 then
+	m:RandomMap("forest")
+elseif dice == 3 then
+	m:RandomMap("volcano")
+end
 m:MemoryInit()
 
 mob_db.Player.position.x = math.random(2,37)
@@ -127,15 +134,15 @@ function love.draw()
 			if v.element == "fire" then
 				love.graphics.setColor(255/255,0/255,0/255)
 			elseif v.element == "water" then
-				love.graphics.setColor(0/255,0/255,255/255)
+				love.graphics.setColor(0/255,100/255,255/255)
 			elseif v.element == "wood" then
-				love.graphics.setColor(165/255,42/255,42/255)
+				love.graphics.setColor(0/255,255/255,100/255)
 			elseif v.element == "metal" then
 				love.graphics.setColor(201/255,247/255,238/255)
 			elseif v.element == "earth" then
-				love.graphics.setColor(0/255,255/255,0/255)
+				love.graphics.setColor(165/255,42/255,42/255)
 			elseif v.element == "air" then
-				love.graphics.setColor(0/255,255/255,255/255)
+				love.graphics.setColor(100/255,255/255,255/255)
 			end
  
 			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist and mob_db.Player:LineOfSight(v.position.x, v.position.y) then
@@ -172,6 +179,7 @@ function love.update(dt)
 		end
 	end
 
-	time.incrementTurns(dt)
-	time.spawner(dt)
+	time.IncrementTurns()
+	time.Spawner()
+	time.ElementalSeepage()
 end
