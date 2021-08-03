@@ -75,6 +75,7 @@ Map = {
 	end,
 
 	DrawMap = function(self)
+		love.graphics.setColor(255,255,255,255)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
 				if mob_db.Player:LineOfSight(i, j) and mob_db.Player:DistToPoint(i, j) <= mob_db.Player.sight_dist then
@@ -95,7 +96,7 @@ Map = {
 	end,
 
 	DrawMapMemory = function(self)
-		love.graphics.setColor(25,25,25,10)
+		love.graphics.setColor(1,1,0,1)
 		for i = 1, self.board_size.x do
 			for j = 1, self.board_size.y do
 				love.graphics.print(self.memory[i][j], i * self.tile_size, j * self.tile_size)

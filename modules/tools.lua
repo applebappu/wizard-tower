@@ -100,7 +100,7 @@ local tools = {
 				love.graphics.setColor(0,255,255)
 			end
  
-			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist then
+			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist and mob_db.Player:LineOfSight(v.position.x, v.position.y) then
 				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
 			end
 		end
