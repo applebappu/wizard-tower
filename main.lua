@@ -1,6 +1,5 @@
 Entity = require "classes.Entity"
 Map = require "classes.Map"
-Vector2 = require "classes.Vector2"
 
 bresenham = require "modules.bresenham"
 item_db = require "modules.item_db"
@@ -121,7 +120,27 @@ function love.draw()
 		m:DrawMapMemory()
 		m:DrawMap()
 		m:DrawItems()
-		tools.DrawMobs()
+
+		for k,v in pairs(resources.spawn_table) do
+			if v.element == "fire" then
+				love.graphics.setColor(255/255,0/255,0/255)
+			elseif v.element == "water" then
+				love.graphics.setColor(0/255,0/255,255/255)
+			elseif v.element == "wood" then
+				love.graphics.setColor(165/255,42/255,42/255)
+			elseif v.element == "metal" then
+				love.graphics.setColor(201/255,247/255,238/255)
+			elseif v.element == "earth" then
+				love.graphics.setColor(0/255,255/255,0/255)
+			elseif v.element == "air" then
+				love.graphics.setColor(0/255,255/255,255/255)
+			end
+ 
+			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist and mob_db.Player:LineOfSight(v.position.x, v.position.y) then
+				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
+			end
+		end
+
 		m:DrawGUI()
 	elseif resources.game_state == "inventory" then
 		mob_db.Player:DrawInventory()
@@ -139,7 +158,7 @@ end
 function love.update(dt)
 	for k,v in pairs(resources.spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
-			if math.random(0,1) >= 0.5 then
+			if math.random(0,1) >= 0.3 then
 				v:Wander()
 			else
 				v:Rest()
