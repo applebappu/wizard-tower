@@ -108,7 +108,7 @@ Entity = {
 	canMove = function(self, dx, dy)
 		local test_x = self.position.x + dx
 		local test_y = self.position.y + dy
-		local test_value = false
+		local test_value = true
 		
 		for k, v in pairs(resources.spawn_table) do
 			if test_x == v.position.x and test_y == v.position.y and v ~= self then
@@ -125,8 +125,8 @@ Entity = {
 		end
 		
 		local test = m.map_table[test_x][test_y]
-		if test == "." or test == "<" or test == ">" then
-			test_value = true
+		if test == "#" then
+			test_value = false
 		end
 
 		return test_value
