@@ -17,7 +17,7 @@ local time = {
 	Spawner = function()
 		while resources.spawn_timer > 20 do
 			tools.ElementalSpawn()
-			resources.spawn_timer = resources.spawn_timer - 1
+			resources.spawn_timer = resources.spawn_timer - 20
 		end
 	end,
 

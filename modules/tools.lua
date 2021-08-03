@@ -55,8 +55,8 @@ local tools = {
 	end,
 
 	ElementalSpawn = function()
-		local threshold1 = 5
-		local threshold2 = 10
+		local threshold1 = 6
+		local threshold2 = 15
 
 		if m.elemental_balance.fire > threshold1 then
 			tools.MakeEntities(mob_db.fire_slime, m.elemental_balance.fire)
@@ -65,7 +65,7 @@ local tools = {
 		end
 
 		if m.elemental_balance.earth > threshold1 then
-			tools.MakeEntities(mob_db.earth_slime, m.elemental_balance.earth)
+			tools.MakeEntities(mob_db.kobold, m.elemental_balance.earth)
 		elseif m.elemental_balance.earth > threshold2 then
 			tools.MakeEntities(item_db.earth_glyph, m.elemental_balance.earth - threshold2)
 		end
@@ -86,12 +86,6 @@ local tools = {
 			tools.MakeEntities(mob_db.metal_slime, m.elemental_balance.metal)
 		elseif m.elemental_balance.metal > threshold2 then
 			tools.MakeEntities(item_db.metal_glyph, m.elemental_balance.metal - threshold2)
-		end
-
-		if m.elemental_balance.air > threshold1 then
-			tools.MakeEntities(mob_db.air_slime, m.elemental_balance.air)
-		elseif m.elemental_balance.air > threshold2 then
-			tools.MakeEntities(item_db.air_glyph, m.elemental_balance.air - threshold2)
 		end
 
 		m:PrintElements()
