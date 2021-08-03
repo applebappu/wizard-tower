@@ -2,33 +2,6 @@ Entity = require "classes.Entity"
 resources = require "modules.resources"
 
 local tools = {
-	setFont = function()
-		font = love.graphics.newFont("courier.ttf", 20)
-		love.graphics.setFont(font)
-	end,
-	
-	setRandomSeed = function()
-	        math.randomseed(os.time() - (os.clock() * 1000))
-	end,
-
-	DiceRoll = function(number, sides)
-		total = {}
-		for i = 1, number do
-			roll = math.random(1,sides)
-			table.insert(total, roll)
-		end
-	end,
-	
-	PrintSpawn = function() 
-		for k,v in pairs(spawn_table) do
-			print(k)
-			for i,j in pairs(v) do
-				print(j)
-			end
-		end
-	end,
-
-	-- copy a table, including its functions (for randomly spawning new stuff)
 	CopyTable = function(table)
 		local new_table = {}
 
@@ -52,7 +25,6 @@ local tools = {
 		return new_table
 	end,
 
-	-- clone a function while preserving upvalues (for randomly spawning new stuff)
 	CloneFunction = function(f)
 		local dumped = string.dump(f)
 		local cloned = loadstring(dumped)
@@ -67,21 +39,6 @@ local tools = {
 			i = i + 1
 		end
 		return cloned
-	end,
-
-	EquipmentQuery = function()
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Equip which glyph?", m.tile_size, 20 * m.tile_size)
-	end,
-
-	UnequipQuery = function()
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Unequip which glyph?", m.tile_size, 20 * m.tile_size)
-	end,
-
-	DropQuery = function()
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Drop which glyph?", m.tile_size, 20 * m.tile_size)
 	end,
 
 	MakeEntities = function(target, iterations)

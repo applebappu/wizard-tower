@@ -9,8 +9,10 @@ resources = require "modules.resources"
 time = require "modules.time"
 tools = require "modules.tools"
 
-tools.setFont()
-tools.setRandomSeed()
+font = love.graphics.newFont("courier.ttf", 20)
+love.graphics.setFont(font)
+
+math.randomseed(os.time() - (os.clock() * 1000))
 
 m = Map.New(38,20,10,10,10,10,10,10)
 m:RandomMap() 
@@ -143,14 +145,16 @@ function love.draw()
 
 		m:DrawGUI()
 	elseif resources.game_state == "inventory" then
+		love.graphics.setColor(255,255,255)
 		mob_db.Player:DrawInventory()
 		mob_db.Player:DrawEquipment()
+
 		if resources.query_substate == "equip" then
-			tools.EquipmentQuery()
-		elseif resources.query_substate == "drop" then
-			tools.DropQuery()
+			love.graphics.print("Equip which item?", m.tile_size, 20 * m.tile_size)
 		elseif resources.query_substate == "unequip" then
-			tools.UnequipQuery()
+			love.graphics.print("Unequip which item?", m.tile_size, 20 * m.tile_size)
+		elseif resources.query_substate == "drop" then
+			love.graphics.print("Drop which item?", m.tile_size, 20 * m.tile_size)
 		end
 	end
 end
