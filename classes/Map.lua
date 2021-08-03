@@ -153,11 +153,6 @@ Map = {
 		end
 	end,
 
-	DrawGUI = function(self)
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, m.tile_size * 22)
-	end,
-
 	PrintElements = function(self)
 		for k, v in pairs(self.elemental_balance) do
 			print(k, v)

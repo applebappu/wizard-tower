@@ -15,7 +15,8 @@ love.graphics.setFont(font)
 math.randomseed(os.time() - (os.clock() * 1000))
 
 m = Map.New()
-dice = math.random(1,3)
+
+local dice = math.random(1,3)
 if dice == 1 then
 	m:RandomMap("cave")
 elseif dice == 2 then
@@ -23,6 +24,7 @@ elseif dice == 2 then
 elseif dice == 3 then
 	m:RandomMap("volcano")
 end
+
 m:MemoryInit()
 
 mob_db.Player.position.x = math.random(2,37)
@@ -33,7 +35,7 @@ function love.keyreleased(k)
 	if k == "escape" then
 		if resources.query_substate ~= nil then
 			resources.query_substate = nil
-		elseif resources.game_state == "inventory" then
+		elseif resources.game_state ~= "main" then
 			resources.game_state = "main"
 		else
 			love.event.quit()
@@ -150,7 +152,9 @@ function love.draw()
 			end
 		end
 
-		m:DrawGUI()
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, m.tile_size, m.tile_size * 22)
+
 	elseif resources.game_state == "inventory" then
 		love.graphics.setColor(255,255,255)
 		mob_db.Player:DrawInventory()

@@ -55,37 +55,32 @@ local tools = {
 	end,
 
 	ElementalSpawn = function()
-		local threshold1 = 6
-		local threshold2 = 15
+		local threshold1 = 10
+		local threshold2 = 100
 
 		if m.elemental_balance.fire > threshold1 then
-			tools.MakeEntities(mob_db.fire_slime, m.elemental_balance.fire)
+			tools.MakeEntities(mob_db.fire_slime, m.elemental_balance.fire / mob_db.fire_slime.elemental_balance.fire)
 		elseif m.elemental_balance.fire > threshold2 then
-			tools.MakeEntities(item_db.fire_glyph, m.elemental_balance.fire - threshold2)
 		end
 
 		if m.elemental_balance.earth > threshold1 then
-			tools.MakeEntities(mob_db.kobold, m.elemental_balance.earth)
+			tools.MakeEntities(mob_db.kobold, m.elemental_balance.earth / mob_db.kobold.elemental_balance.earth)
 		elseif m.elemental_balance.earth > threshold2 then
-			tools.MakeEntities(item_db.earth_glyph, m.elemental_balance.earth - threshold2)
 		end
 
 		if m.elemental_balance.water > threshold1 then
-			tools.MakeEntities(mob_db.water_slime, m.elemental_balance.water)
+			tools.MakeEntities(mob_db.water_slime, m.elemental_balance.water / mob_db.water_slime.elemental_balance.water)
 		elseif m.elemental_balance.water > threshold2 then
-			tools.MakeEntities(item_db.water_glyph, m.elemental_balance.water - threshold2)
 		end
  
 		if m.elemental_balance.wood > threshold1 then
-			tools.MakeEntities(mob_db.wood_slime, m.elemental_balance.wood)
+			tools.MakeEntities(mob_db.wood_slime, m.elemental_balance.wood / mob_db.wood_slime.elemental_balance.wood)
 		elseif m.elemental_balance.wood > threshold2 then
-			tools.MakeEntities(item_db.wood_glyph, m.elemental_balance.wood - threshold2)
 		end
 		
 		if m.elemental_balance.metal > threshold1 then
-			tools.MakeEntities(mob_db.metal_slime, m.elemental_balance.metal)
+			tools.MakeEntities(mob_db.metal_slime, m.elemental_balance.metal / mob_db.metal_slime.elemental_balance.metal)
 		elseif m.elemental_balance.metal > threshold2 then
-			tools.MakeEntities(item_db.metal_glyph, m.elemental_balance.metal - threshold2)
 		end
 
 		m:PrintElements()
