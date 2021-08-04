@@ -57,6 +57,10 @@ function love.keyreleased(k)
 			mob_db.Player:Pickup()
 		elseif k == "i" then
 			resources.game_state = "inventory"
+		elseif k == "m" then
+			-- meditate
+		elseif k == "b" then
+			-- spellbook
 		end
 
 		if k == "." and resources.current_map.map_table[mob_db.Player.position.x][mob_db.Player.position.y] == ">" then
@@ -160,6 +164,14 @@ function love.draw()
 
 		love.graphics.setColor(255,255,255)
 		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, resources.current_map.tile_size, resources.current_map.tile_size * 22)
+		love.graphics.print("Fire: "..mob_db.Player.elemental_balance.fire.."/"..mob_db.Player.elemental_max.fire, resources.current_map.tile_size, resources.current_map.tile_size * 23)
+		love.graphics.print("Earth: "..mob_db.Player.elemental_balance.earth.."/"..mob_db.Player.elemental_max.earth, resources.current_map.tile_size, resources.current_map.tile_size * 24)
+		love.graphics.print("Wood: "..mob_db.Player.elemental_balance.wood.."/"..mob_db.Player.elemental_max.wood, resources.current_map.tile_size, resources.current_map.tile_size * 25)
+		love.graphics.print("Water: "..mob_db.Player.elemental_balance.water.."/"..mob_db.Player.elemental_max.water, resources.current_map.tile_size, resources.current_map.tile_size * 26)
+		love.graphics.print("Metal: "..mob_db.Player.elemental_balance.metal.."/"..mob_db.Player.elemental_max.metal, resources.current_map.tile_size, resources.current_map.tile_size * 27)
+		love.graphics.print("Air: "..mob_db.Player.elemental_balance.air.."/"..mob_db.Player.elemental_max.air, resources.current_map.tile_size, resources.current_map.tile_size * 28)
+
+		love.graphics.print("Tower Level: "..resources.tower_level, resources.current_map.tile_size * 20, resources.current_map.tile_size * 22)
 
 	elseif resources.game_state == "inventory" then
 		love.graphics.setColor(255,255,255)

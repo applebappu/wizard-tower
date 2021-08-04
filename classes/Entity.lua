@@ -29,6 +29,14 @@ Entity = {
 		metal = 0,
 		air = 0
 	},
+	elemental_max = {
+		fire = 0,
+		earth = 0,
+		water = 0,
+		wood = 0,
+		metal = 0,
+		air = 0
+	},
 
 	Spawn = function(self)
 		table.insert(resources.spawn_table, self)
