@@ -43,11 +43,16 @@ Entity = {
 	can_see = true,
 	sight_dist = 5,
 	can_smell = true,
+	smell_dist = 5,
 	can_hear = true,
+	hear_dist = 5,
 
 	satiety = 100,
-	nourishment = 1,
+	nourishment = 10,
+	is_food = true,
 	stamina = 100,
+
+	laziness = 0.5,
 
 	Spawn = function(self)
 		table.insert(spawn_table, self)
@@ -79,7 +84,7 @@ Entity = {
 				end
 
 				for k,v in pairs(self.inventory) do
-					Drop("all")
+					self:Drop("all")
 				end
 			end
 		end
@@ -201,7 +206,7 @@ Entity = {
 	Drop = function(self, target)
 		if target == "all" then
 			for k,v in pairs(self.inventory) do
-				table.remove(v, k)
+				table.remove(self.inventory, k)
 				target.position = {
 					x = self.position.x,
 					y = self.position.y
@@ -211,7 +216,7 @@ Entity = {
 		else
 			for k, v in pairs(self.inventory) do
 				if v == target then
-					table.remove(target, k)
+					table.remove(self.inventory, k)
 					target.position = {
 						x = self.position.x,
 						y = self.position.y
@@ -220,26 +225,32 @@ Entity = {
 				end
 			end
 		end
+		query_substate = nil
 		tools.TimerTick()
+		print(self.name.." dropped "..target.name)
 	end,
 
 	Equip = function(self, item)
 		print("Equip beginning")
-		for k,v in pairs(self.inventory) do
-			if v == item then
-				print("Equipping "..v.name)
-				table.insert(self.equipment, v)
-				table.remove(self.inventory, k)
-				print("Equip is adding stats")
-				print("pre-equip stats: "..self.attack..", "..self.defense..", "..self.speed)
-				self.attack = self.attack + v.attack
-				self.defense = self.defense + v.defense
-				self.speed = self.speed + v.speed
-				print("post-equip: "..self.attack..", "..self.defense..", "..self.speed)
+		if #self.equipment < 6 then
+ 			for k,v in pairs(self.inventory) do
+				if v == item then
+					print("Equipping "..v.name)
+					table.insert(self.equipment, v)
+					table.remove(self.inventory, k)
+					print("Equip is adding stats")
+					print("pre-equip stats: "..self.attack..", "..self.defense..", "..self.speed)
+					self.attack = self.attack + v.attack
+					self.defense = self.defense + v.defense
+					self.speed = self.speed + v.speed
+					print("post-equip: "..self.attack..", "..self.defense..", "..self.speed)
+				end
 			end
+			query_substate = nil
+			print("Equip ended")
+		else
+			print("equipment full")
 		end
-		query_substate = nil
-		print("Equip ended")
 	end,
 
 	Unequip = function(self, item)
@@ -324,8 +335,17 @@ Entity = {
 		return true
 	end,
 
-	Eat = function(self, target)
-		target:Die()
+	Eat = function(self, target, eat_type)
+		if eat_type == "world" then
+			target:Die()
+		elseif eat_type == "inventory" then
+			for k,v in pairs(self.inventory) do
+				if v == target then
+					table.remove(self.inventory, k)
+				end
+			end
+			query_substate = nil
+		end
 		self.satiety = self.satiety + target.nourishment
 		print(self.name.." eats "..target.name)
 	end

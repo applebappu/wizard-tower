@@ -14,10 +14,12 @@ love.graphics.setFont(font)
 -- globals
 spawn_table = {}
 world_spawn_memory = {}
+world_spawn_memory[1] = {}
 
 current_map = {}
 tower_level = 1
 world_map_memory = {}
+world_map_memory[1] = {}
 tower_height = 10
 
 souls = 0
@@ -33,10 +35,6 @@ query_substate = nil
 -- init
 math.randomseed(os.time() - (os.clock() * 1000))
 
-for i = 1, tower_height do
-	world_spawn_memory[i] = {}
-	world_map_memory[i] = {}
-end
 
 tools.NewLevel()
 
@@ -49,8 +47,6 @@ for i = 1, current_map.board_size.x do
 		end
 	end				
 end
-
-
 
 item_db.cheeseburger:Spawn()
 
@@ -137,6 +133,8 @@ function love.keyreleased(k)
 			query_substate = "unequip"
 		elseif k == "d" and query_substate == nil then
 			query_substate = "drop"
+		elseif k == "c" and query_substate == nil then
+			query_substate = "consume"
 		end
 	end
 	
@@ -175,13 +173,55 @@ function love.keyreleased(k)
 			b:Unequip(b.equipment[a])
 		elseif k == "4" then
 			local a = 4
-			b:Unequip(b.inventory[a])
+			b:Unequip(b.equipment[a])
 		elseif k == "5" then
 			local a = 5
-			b:Unequip(b.inventory[a])
+			b:Unequip(b.equipment[a])
 		elseif k == "6" then
 			local a = 6
-			b:Unequip(b.inventory[a])
+			b:Unequip(b.equipment[a])
+		end
+	elseif game_state == "inventory" and query_substate == "drop" then
+		local b = mob_db.Player
+		if k == "1" then
+			local a = 1
+			b:Drop(b.inventory[a])
+		elseif k == "2" then
+			local a = 2
+			b:Drop(b.inventory[a])
+		elseif k == "3" then
+			local a = 3
+			b:Drop(b.inventory[a])
+		elseif k == "4" then
+			local a = 4
+			b:Drop(b.inventory[a])
+		elseif k == "5" then
+			local a = 5
+			b:Drop(b.inventory[a])
+		elseif k == "6" then
+			local a = 6
+			b:Drop(b.inventory[a])
+		end
+	elseif game_state == "inventory" and query_substate == "consume" then
+		local b = mob_db.Player
+		if k == "1" then
+			local a = 1
+			b:Eat(b.inventory[a], "inventory")
+		elseif k == "2" then
+			local a = 2
+			b:Eat(b.inventory[a], "inventory")
+		elseif k == "3" then
+			local a = 3
+			b:Eat(b.inventory[a], "inventory")
+		elseif k == "4" then
+			local a = 4
+			b:Eat(b.inventory[a], "inventory")
+		elseif k == "5" then
+			local a = 5	
+			b:Eat(b.inventory[a], "inventory")
+		elseif k == "6" then
+			local a = 6	
+			b:Eat(b.inventory[a], "inventory")
 		end
 	end
 end
@@ -281,15 +321,17 @@ function love.draw()
 			love.graphics.print("Unequip which item?", current_map.tile_size, 20 * current_map.tile_size)
 		elseif query_substate == "drop" then
 			love.graphics.print("Drop which item?", current_map.tile_size, 20 * current_map.tile_size)
+		elseif query_substate == "consume" then
+			love.graphics.print("Consume which item?", current_map.tile_size, 20 * current_map.tile_size)
 		end
 	end
 end
 
 function love.update(dt)
-	-- increment turns
+	-- basic "AI"
 	for k,v in pairs(spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
-			if math.random(0,1) >= 0.25 then
+			if math.random(0,1) >= v.laziness then
 				v:Wander()
 			else
 				v:Rest()
@@ -299,6 +341,7 @@ function love.update(dt)
 		end
 	end
 
+	-- increment turns
 	for k,v in pairs(spawn_table) do
 		if v.myTurn == false then
 			v.turn_timer = v.turn_timer - 1

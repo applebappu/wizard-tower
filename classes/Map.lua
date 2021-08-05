@@ -107,17 +107,17 @@ Map = {
 			for j = 1, #self.map_table[i] do
 				local tile = self.map_table[i][j]
 				if tile == "#" then 
-					self:InfuseElements(0, 0.005, 0, 0, 0, 0)
+					self:InfuseElements(0, 0.1, 0, 0, 0, 0)
 				elseif tile == "." then
-					self:InfuseElements(0, 0, 0, 0, 0, 0.005)
+					self:InfuseElements(0, 0, 0, 0, 0, 0.1)
 				elseif tile == "~" then
-					self:InfuseElements(0, 0, 0.01, 0, 0, 0)
+					self:InfuseElements(0, 0, 0.1, 0, 0, 0)
 				elseif tile == "4" then
-					self:InfuseElements(0, 0, 0, 0.01, 0, 0)
+					self:InfuseElements(0, 0, 0, 0.1, 0, 0)
 				elseif tile == "6" then
-					self:InfuseElements(0.01, 0, 0, 0, 0, 0)
+					self:InfuseElements(0.1, 0, 0, 0, 0, 0)
 				elseif tile == "^" then
-					self:InfuseElements(0, 0, 0, 0, 0.01, 0)
+					self:InfuseElements(0, 0, 0, 0, 0.1, 0)
 				end
 			end
 		end
