@@ -157,8 +157,7 @@ Entity = {
 			self.myTurn = false
 
 			if self.name == "Player" then 
-				spawn_timer = spawn_timer + 1
-				element_timer = element_timer + 1
+				TimerTick()
 			end
 			print("move complete for "..self.name)
 		elseif self.myTurn then
@@ -194,7 +193,7 @@ Entity = {
 
 		self.turn_timer = self.turn_timer + (one_turn / self.speed)
 		self.myTurn = false
-		time.TimerTick()
+		TimerTick()
 	end,
 
 	Drop = function(self, target)
@@ -265,7 +264,7 @@ Entity = {
 		print(target.name .. "'s HP is now "..target.hp_current)
 		self.turn_timer = self.turn_timer + (one_turn / self.speed)
 		self.myTurn = false
-		time.TimerTick()
+		TimerTick()
 	end,
 
 	DrawInventory = function(self)
