@@ -156,6 +156,8 @@ Entity = {
 			self.turn_timer = self.turn_timer + (one_turn / self.speed)
 			self.myTurn = false
 
+			self.satiety = self.satiety - 1
+
 			if self.name == "Player" then 
 				tools.TimerTick()
 			end

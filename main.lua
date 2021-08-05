@@ -14,6 +14,7 @@ love.graphics.setFont(font)
 -- globals
 spawn_table = {}
 world_spawn_memory = {}
+
 current_map = {}
 tower_level = 1
 world_map_memory = {}
@@ -22,6 +23,7 @@ tower_height = 10
 souls = 0
 
 one_turn = 100
+
 spawn_timer = 0
 element_timer = 0
 
@@ -31,12 +33,24 @@ query_substate = nil
 -- init
 math.randomseed(os.time() - (os.clock() * 1000))
 
-tools.TowerLevelInit()
+for i = 1, tower_height do
+	world_spawn_memory[i] = {}
+	world_map_memory[i] = {}
+end
+
 tools.NewLevel()
 
-mob_db.Player.position.x = math.random(2,37)
-mob_db.Player.position.y = math.random(2,19)
 mob_db.Player:Spawn()
+for i = 1, current_map.board_size.x do
+	for j = 1, current_map.board_size.y do
+		if current_map.map_table[i][j] == ">" then
+			mob_db.Player.position.x = i
+			mob_db.Player.position.y = j
+		end
+	end				
+end
+
+
 
 item_db.cheeseburger:Spawn()
 
@@ -81,7 +95,8 @@ function love.keyreleased(k)
 		elseif k == "b" then
 			-- spellbook
 		end
-
+		
+		-- changing levels
 		if k == "." and current_map.map_table[mob_db.Player.position.x][mob_db.Player.position.y] == ">" then
 			if tower_level == 1 then
 				print("leaving the tower")
@@ -90,12 +105,28 @@ function love.keyreleased(k)
 				tower_level = tower_level - 1
 				current_map = world_map_memory[tower_level]
 				spawn_table = world_spawn_memory[tower_level]	
+				for i = 1, current_map.board_size.x do
+					for j = 1, current_map.board_size.y do
+						if current_map.map_table[i][j] == "<" then
+							mob_db.Player.position.x = i
+							mob_db.Player.position.y = j
+						end
+					end				
+				end
 			end
 		elseif k == "," and current_map.map_table[mob_db.Player.position.x][mob_db.Player.position.y] == "<" then
 			world_map_memory[tower_level] = current_map
 			world_spawn_memory[tower_level] = spawn_table
 			tower_level = tower_level + 1
 			tools.NewLevel()
+			for i = 1, current_map.board_size.x do
+				for j = 1, current_map.board_size.y do
+					if current_map.map_table[i][j] == ">" then
+						mob_db.Player.position.x = i
+						mob_db.Player.position.y = j
+					end
+				end				
+			end
 		end
 	end
 
