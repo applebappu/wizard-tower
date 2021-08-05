@@ -3,7 +3,6 @@ item_db = require "modules.item_db"
 map_pieces = require "modules.map_pieces"
 mob_db = require "modules.mob_db"
 resources = require "modules.resources"
-time = require "modules.time"
 tools = require "modules.tools"
 
 Entity = require "classes.Entity"
@@ -20,6 +19,8 @@ tools.NewLevel()
 mob_db.Player.position.x = math.random(2,37)
 mob_db.Player.position.y = math.random(2,19)
 mob_db.Player:Spawn()
+
+item_db.cheeseburger:Spawn()
 
 function love.keyreleased(k)
 	if k == "escape" then
@@ -138,10 +139,53 @@ end
 
 function love.draw()
 	if resources.game_state == "main" then
-		resources.current_map:DrawMapMemory()
-		resources.current_map:DrawMap()
-		resources.current_map:DrawItems()
+		-- draw map memory
+		love.graphics.setColor(100/255,100/255,100/255,255/255)
+		for i = 1, resources.current_map.board_size.x do
+			for j = 1, resources.current_map.board_size.y do
+				love.graphics.print(resources.current_map.memory[i][j], i * resources.current_map.tile_size, j * resources.current_map.tile_size)
+			end
+		end
 
+		-- draw map
+		for i = 1, resources.current_map.board_size.x do
+			for j = 1, resources.current_map.board_size.y do
+				if mob_db.Player:LineOfSight(i, j) and mob_db.Player:DistToPoint(i, j) <= mob_db.Player.sight_dist then
+					local tile = resources.current_map.map_table[i][j]
+					local tileset = resources.current_map.map_tileset
+					
+					if tile  == "4" then
+						love.graphics.setColor(0/255, 150/255, 0/255)
+					elseif tile == "~" then
+						love.graphics.setColor(0/255, 0/255, 150/255)
+					elseif tile == "6" then
+						love.graphics.setColor(255/255, 180/255, 0/255)
+					elseif tile == "^" then
+						love.graphics.setColor(100/255, 125/255, 150/255)
+					elseif tile == "<" or tile == ">" then
+						love.graphics.setColor(255/255, 255/255, 255/255)
+					else
+						if tileset == "forest" and tile == "#" then
+							love.graphics.setColor(0/255,255/255,255/255,125/255)
+						elseif tileset == "forest" and tile == "." then
+							love.graphics.setColor(0/255, 200/255, 100/255)
+						elseif tileset == "volcano" and tile == "#" then
+							love.graphics.setColor(200/255, 100/255, 0/255)
+						elseif tileset == "volcano" and tile == "." then
+							love.graphics.setColor(150/255, 75/255, 0/255)
+						elseif tileset == "cave" and tile == "#" then
+							love.graphics.setColor(255/255, 255/255, 255/255)
+						elseif tileset == "cave" and tile == "." then
+							love.graphics.setColor(200/255, 200/255, 200/255)
+						end
+					end
+					love.graphics.print(resources.current_map.map_table[i][j], i * resources.current_map.tile_size, j * resources.current_map.tile_size)
+					resources.current_map.memory[i][j] = resources.current_map.map_table[i][j]
+				end
+			end
+		end
+
+		-- draw entities 
 		for k,v in pairs(resources.spawn_table) do
 			if v.element == "fire" then
 				love.graphics.setColor(255/255,0/255,0/255)
@@ -162,16 +206,20 @@ function love.draw()
 			end
 		end
 
+		-- draw GUI
+		local ts = resources.current_map.tile_size
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, resources.current_map.tile_size, resources.current_map.tile_size * 22)
-		love.graphics.print("Fire: "..mob_db.Player.elemental_balance.fire.."/"..mob_db.Player.elemental_max.fire, resources.current_map.tile_size, resources.current_map.tile_size * 23)
-		love.graphics.print("Earth: "..mob_db.Player.elemental_balance.earth.."/"..mob_db.Player.elemental_max.earth, resources.current_map.tile_size, resources.current_map.tile_size * 24)
-		love.graphics.print("Wood: "..mob_db.Player.elemental_balance.wood.."/"..mob_db.Player.elemental_max.wood, resources.current_map.tile_size, resources.current_map.tile_size * 25)
-		love.graphics.print("Water: "..mob_db.Player.elemental_balance.water.."/"..mob_db.Player.elemental_max.water, resources.current_map.tile_size, resources.current_map.tile_size * 26)
-		love.graphics.print("Metal: "..mob_db.Player.elemental_balance.metal.."/"..mob_db.Player.elemental_max.metal, resources.current_map.tile_size, resources.current_map.tile_size * 27)
-		love.graphics.print("Air: "..mob_db.Player.elemental_balance.air.."/"..mob_db.Player.elemental_max.air, resources.current_map.tile_size, resources.current_map.tile_size * 28)
+		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, ts, ts * 22)
+		love.graphics.print("Fire: "..mob_db.Player.elemental_balance.fire.."/"..mob_db.Player.elemental_max.fire, ts, ts * 23)
+		love.graphics.print("Earth: "..mob_db.Player.elemental_balance.earth.."/"..mob_db.Player.elemental_max.earth, ts, ts * 24)
+		love.graphics.print("Wood: "..mob_db.Player.elemental_balance.wood.."/"..mob_db.Player.elemental_max.wood, ts, ts * 25)
+		love.graphics.print("Water: "..mob_db.Player.elemental_balance.water.."/"..mob_db.Player.elemental_max.water, ts, ts * 26)
+		love.graphics.print("Metal: "..mob_db.Player.elemental_balance.metal.."/"..mob_db.Player.elemental_max.metal, ts, ts * 27)
+		love.graphics.print("Air: "..mob_db.Player.elemental_balance.air.."/"..mob_db.Player.elemental_max.air, ts, ts * 28)
 
-		love.graphics.print("Tower Level: "..resources.tower_level, resources.current_map.tile_size * 20, resources.current_map.tile_size * 22)
+		love.graphics.print("Satiety: "..mob_db.Player.satiety.."/100", ts * 10, ts * 22)
+
+		love.graphics.print("Tower Level: "..resources.tower_level, resources.current_map.tile_size * 23, resources.current_map.tile_size * 22)
 
 	elseif resources.game_state == "inventory" then
 		love.graphics.setColor(255,255,255)
@@ -189,6 +237,7 @@ function love.draw()
 end
 
 function love.update(dt)
+	-- increment turns
 	for k,v in pairs(resources.spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
 			if math.random(0,1) >= 0.25 then
@@ -201,7 +250,27 @@ function love.update(dt)
 		end
 	end
 
-	time.IncrementTurns()
-	time.Spawner()
-	time.ElementalSeepage()
+	for k,v in pairs(resources.spawn_table) do
+		if v.myTurn == false then
+			v.turn_timer = v.turn_timer - 1
+		end
+		for k, v in pairs(resources.spawn_table) do
+			if v.turn_timer <= 0 then
+				v.turn_timer = 0
+				v.myTurn = true
+				break
+			end
+		end
+	end
+
+	-- changes over time
+	while resources.spawn_timer > 20 do
+		tools.ElementalSpawn()
+		resources.spawn_timer = resources.spawn_timer - 20
+	end
+	while resources.element_timer > 5 do
+		resources.current_map:TileElements()
+		resources.element_timer = resources.element_timer - 5
+	end
+
 end

@@ -87,45 +87,6 @@ Map = {
 		s.air = s.air + a
 	end,
 
-	DrawMap = function(self)
-		for i = 1, self.board_size.x do
-			for j = 1, self.board_size.y do
-				if mob_db.Player:LineOfSight(i, j) and mob_db.Player:DistToPoint(i, j) <= mob_db.Player.sight_dist then
-					local tile = self.map_table[i][j]
-					local tileset = self.map_tileset
-					
-					if tile  == "4" then
-						love.graphics.setColor(0/255, 150/255, 0/255)
-					elseif tile == "~" then
-						love.graphics.setColor(0/255, 0/255, 150/255)
-					elseif tile == "6" then
-						love.graphics.setColor(255/255, 180/255, 0/255)
-					elseif tile == "^" then
-						love.graphics.setColor(100/255, 125/255, 150/255)
-					elseif tile == "<" or tile == ">" then
-						love.graphics.setColor(255/255, 255/255, 255/255)
-					else
-						if tileset == "forest" and tile == "#" then
-							love.graphics.setColor(0/255,255/255,255/255,125/255)
-						elseif tileset == "forest" and tile == "." then
-							love.graphics.setColor(0/255, 200/255, 100/255)
-						elseif tileset == "volcano" and tile == "#" then
-							love.graphics.setColor(200/255, 100/255, 0/255)
-						elseif tileset == "volcano" and tile == "." then
-							love.graphics.setColor(150/255, 75/255, 0/255)
-						elseif tileset == "cave" and tile == "#" then
-							love.graphics.setColor(255/255, 255/255, 255/255)
-						elseif tileset == "cave" and tile == "." then
-							love.graphics.setColor(200/255, 200/255, 200/255)
-						end
-					end
-					love.graphics.print(self.map_table[i][j], i * self.tile_size, j * self.tile_size)
-					self.memory[i][j] = self.map_table[i][j]
-				end
-			end
-		end
-	end,
-
 	MemoryInit = function(self)
 		for i = 1, self.board_size.x do
 			self.memory[i] = {}
@@ -133,24 +94,6 @@ Map = {
 				self.memory[i][j] = {}
 			end
 		end		
-	end,
-
-	DrawMapMemory = function(self)
-		love.graphics.setColor(100/255,100/255,100/255,255/255)
-		for i = 1, self.board_size.x do
-			for j = 1, self.board_size.y do
-				love.graphics.print(self.memory[i][j], i * self.tile_size, j * self.tile_size)
-			end
-		end
-	end,
-
-	DrawItems = function(self)
-		for k,v in pairs(resources.spawn_table) do
-			if v.entity_type == "item" then
-				love.graphics.setColor(150,150,150)
-				love.graphics.print(v.char, v.position.x * m.tile_size, v.position.y * m.tile_size)
-			end
-		end
 	end,
 
 	PrintElements = function(self)

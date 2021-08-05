@@ -55,18 +55,20 @@ local tools = {
 	end,
 
 	ElementalSpawn = function()
-		local threshold1 = 20
-		local threshold2 = 100
+		local threshold1 = 30
+		local threshold2 = 10
 		local current_map = resources.current_map
 
 		if current_map.elemental_balance.fire > threshold1 then
 			tools.MakeEntities(mob_db.fire_slime, 1)
 		elseif current_map.elemental_balance.fire > threshold2 then
+			
 		end
 
 		if current_map.elemental_balance.earth > threshold1 then
 			tools.MakeEntities(mob_db.kobold, 1)
 		elseif current_map.elemental_balance.earth > threshold2 then
+			tools.MakeEntities(item_db.cheeseburger, 1)
 		end
 
 		if current_map.elemental_balance.water > threshold1 then

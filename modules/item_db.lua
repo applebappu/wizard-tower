@@ -5,6 +5,7 @@ tools = require "modules.tools"
 
 -- GLYPHS --
 item_db.glyph = tools.CopyTable(Entity)
+item_db.glyph.name = "glyph"
 item_db.glyph.char = "%"
 
 item_db.fire_glyph = tools.CopyTable(item_db.glyph)
@@ -30,6 +31,14 @@ item_db.metal_glyph.elemental_balance.metal = 10
 item_db.air_glyph = tools.CopyTable(item_db.glyph)
 item_db.air_glyph.element = "air"
 item_db.air_glyph.elemental_balance.air = 10
+
+-- FOOD --
+item_db.cheeseburger = tools.CopyTable(Entity)
+item_db.cheeseburger.name = "cheeseburger"
+item_db.cheeseburger.char = "%"
+item_db.cheeseburger.element = "earth"
+item_db.cheeseburger.elemental_balance.earth = 5
+item_db.cheeseburger.nourishment = 50
 
 for k,v in pairs(item_db) do
 	v.entity_type = "item"

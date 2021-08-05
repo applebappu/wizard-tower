@@ -11,16 +11,20 @@ Entity = {
 	char = "@",
 	hp_current = 1,
 	hp_max = 1,
+
 	turn_timer = 0,
 	myTurn = false,
+
 	inventory = {},
 	equipment = {},
-	element = "air",
+
 	attack = 1,
 	defense = 0,
 	speed = 10,
-	sight_dist = 5,
+
 	entity_type = nil,
+
+	element = "air",
 	elemental_balance = {
 		fire = 0,
 		earth = 0,
@@ -37,6 +41,15 @@ Entity = {
 		metal = 0,
 		air = 0
 	},
+
+	can_see = true,
+	sight_dist = 5,
+	can_smell = true,
+	can_hear = true,
+
+	satiety = 100,
+	nourishment = 1,
+	stamina = 100,
 
 	Spawn = function(self)
 		table.insert(resources.spawn_table, self)
@@ -145,7 +158,10 @@ Entity = {
 			self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
 			self.myTurn = false
 
-			time.TimerTick()
+			if self.name == "Player" then 
+				resources.spawn_timer = resources.spawn_timer + 1
+				resources.element_timer = resources.element_timer + 1
+			end
 			print("move complete for "..self.name)
 		elseif self.myTurn then
 			
@@ -256,7 +272,7 @@ Entity = {
 
 	DrawInventory = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Inventory:", resources.current_map.tile_size, current_map.tile_size)
+		love.graphics.print("Inventory:", resources.current_map.tile_size, resources.current_map.tile_size)
 		for k,v in ipairs(self.inventory) do
 			love.graphics.print(k.." - ", resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
 			love.graphics.print(self.inventory[k].name, 4 * resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
@@ -275,6 +291,8 @@ Entity = {
 	Rest = function(self)
 		self.turn_timer = self.turn_timer + (resources.one_turn)
 		self.myTurn = false
+		self.stamina = self.stamina + 10
+		self.satiety = self.satiety - 1
 		print(self.name.." rests")
 	end,
 
@@ -305,6 +323,12 @@ Entity = {
 		end
 		
 		return true
+	end,
+
+	Eat = function(self, target)
+		target:Die()
+		self.satiety = self.satiety + target.nourishment
+		print(self.name.." eats "..target.name)
 	end
 }
 
