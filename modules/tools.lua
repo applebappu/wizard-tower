@@ -107,6 +107,11 @@ local tools = {
 			world_spawn_memory[i] = {}
 			world_map_memory[i] = {}
 		end
+	end,
+
+	TimerTick = function()
+		spawn_timer = spawn_timer + 1
+		element_timer = element_timer + 1	
 	end
 }
 

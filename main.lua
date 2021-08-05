@@ -28,11 +28,6 @@ element_timer = 0
 game_state = "main"
 query_substate = nil
 
-function TimerTick()
-	spawn_timer = spawn_timer + 1
-	element_timer = element_timer + 1	
-end
-
 -- init
 math.randomseed(os.time() - (os.clock() * 1000))
 

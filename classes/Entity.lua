@@ -157,7 +157,7 @@ Entity = {
 			self.myTurn = false
 
 			if self.name == "Player" then 
-				TimerTick()
+				tools.TimerTick()
 			end
 			print("move complete for "..self.name)
 		elseif self.myTurn then
@@ -193,7 +193,7 @@ Entity = {
 
 		self.turn_timer = self.turn_timer + (one_turn / self.speed)
 		self.myTurn = false
-		TimerTick()
+		tools.TimerTick()
 	end,
 
 	Drop = function(self, target)
@@ -218,7 +218,7 @@ Entity = {
 				end
 			end
 		end
-		time.TimerTick()
+		tools.TimerTick()
 	end,
 
 	Equip = function(self, item)
@@ -264,7 +264,7 @@ Entity = {
 		print(target.name .. "'s HP is now "..target.hp_current)
 		self.turn_timer = self.turn_timer + (one_turn / self.speed)
 		self.myTurn = false
-		TimerTick()
+		tools.TimerTick()
 	end,
 
 	DrawInventory = function(self)
