@@ -1,7 +1,6 @@
 Entity = require "classes.Entity"
 
 bresenham = require "modules.bresenham"
-resources = require "modules.resources"
 map_pieces = require "modules.map_pieces"
 
 Map = {
@@ -122,7 +121,7 @@ Map = {
 				end
 			end
 		end
-		resources.current_map:PrintElements()	
+		current_map:PrintElements()	
 	end
 }
 

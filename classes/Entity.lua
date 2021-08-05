@@ -1,6 +1,4 @@
 bresenham = require "modules.bresenham"
-resources = require "modules.resources"
-time = require "modules.time"
 
 Entity = {
 	name = "no name",
@@ -52,7 +50,7 @@ Entity = {
 	stamina = 100,
 
 	Spawn = function(self)
-		table.insert(resources.spawn_table, self)
+		table.insert(spawn_table, self)
 		
 		local s = self.elemental_balance
 		local f = s.fire
@@ -62,21 +60,21 @@ Entity = {
 		local me = s.metal
 		local a = s.air
 
-		resources.current_map:InfuseElements(-f,-e,-wa,-wd,-me,-a)
+		current_map:InfuseElements(-f,-e,-wa,-wd,-me,-a)
 		
-		resources.current_map.map_table[self.position.x][self.position.y] = "."
+		current_map.map_table[self.position.x][self.position.y] = "."
 	end,
 
 	Die = function(self)
-		for k, v in pairs(resources.spawn_table) do
+		for k, v in pairs(spawn_table) do
 			if v == self then
-				table.remove(resources.spawn_table, k)
-				resources.souls = resources.souls + 1
+				table.remove(spawn_table, k)
+				souls = souls + 1
 
 				local a = self.elemental_balance
-				resources.current_map:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
+				current_map:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
 
-				for k,v in pairs(resources.current_map.elemental_balance) do
+				for k,v in pairs(current_map.elemental_balance) do
 					print(k,v)
 				end
 
@@ -127,7 +125,7 @@ Entity = {
 		local test_y = self.position.y + dy
 		local test_value = true
 		
-		for k, v in pairs(resources.spawn_table) do
+		for k, v in pairs(spawn_table) do
 			if test_x == v.position.x and test_y == v.position.y and v ~= self then
 				if v.entity_type == "mob" then
 					print("canMove says Bump!")
@@ -137,11 +135,11 @@ Entity = {
 			end
 		end
 		
-		if test_x < 1 or test_x > resources.current_map.board_size.x then 
+		if test_x < 1 or test_x > current_map.board_size.x then 
 			return test_value
 		end
 		
-		local test = resources.current_map.map_table[test_x][test_y]
+		local test = current_map.map_table[test_x][test_y]
 		if test == "#" then
 			test_value = false
 		end
@@ -155,12 +153,12 @@ Entity = {
 			self.position.x = self.position.x + dx
 			self.position.y = self.position.y + dy
 
-			self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
+			self.turn_timer = self.turn_timer + (one_turn / self.speed)
 			self.myTurn = false
 
 			if self.name == "Player" then 
-				resources.spawn_timer = resources.spawn_timer + 1
-				resources.element_timer = resources.element_timer + 1
+				spawn_timer = spawn_timer + 1
+				element_timer = element_timer + 1
 			end
 			print("move complete for "..self.name)
 		elseif self.myTurn then
@@ -176,7 +174,7 @@ Entity = {
 
 	Pickup = function(self)
 		local target = nil
-		for k,v in pairs(resources.spawn_table) do
+		for k,v in pairs(spawn_table) do
 			if v.position.x == self.position.x and v.position.y == self.position.y then
 				if v ~= self then
 					target = v
@@ -194,7 +192,7 @@ Entity = {
 			print(self.name.." inventory full")
 		end
 
-		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
+		self.turn_timer = self.turn_timer + (one_turn / self.speed)
 		self.myTurn = false
 		time.TimerTick()
 	end,
@@ -239,7 +237,7 @@ Entity = {
 				print("post-equip: "..self.attack..", "..self.defense..", "..self.speed)
 			end
 		end
-		resources.query_substate = nil
+		query_substate = nil
 		print("Equip ended")
 	end,
 
@@ -258,38 +256,38 @@ Entity = {
 				print("post-unequip: "..self.attack..", "..self.defense..", "..self.speed)
 			end
 		end
-		resources.query_substate = nil
+		query_substate = nil
 		print("Unequip ended")
 	end,
 
 	Bump = function(self, target)
 		target:ChangeHP(-self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
-		self.turn_timer = self.turn_timer + (resources.one_turn / self.speed)
+		self.turn_timer = self.turn_timer + (one_turn / self.speed)
 		self.myTurn = false
 		time.TimerTick()
 	end,
 
 	DrawInventory = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Inventory:", resources.current_map.tile_size, resources.current_map.tile_size)
+		love.graphics.print("Inventory:", current_map.tile_size, current_map.tile_size)
 		for k,v in ipairs(self.inventory) do
-			love.graphics.print(k.." - ", resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
-			love.graphics.print(self.inventory[k].name, 4 * resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
+			love.graphics.print(k.." - ", current_map.tile_size, (k + 1) * current_map.tile_size)
+			love.graphics.print(self.inventory[k].name, 4 * current_map.tile_size, (k + 1) * current_map.tile_size)
 		end
 	end,
 
 	DrawEquipment = function(self)
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("Equipment:", 20 * resources.current_map.tile_size, resources.current_map.tile_size)
+		love.graphics.print("Equipment:", 20 * current_map.tile_size, current_map.tile_size)
 		for k,v in ipairs(self.equipment) do
-			love.graphics.print(k.." - ", 20 * resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
-			love.graphics.print(self.equipment[k].name, 24 * resources.current_map.tile_size, (k + 1) * resources.current_map.tile_size)
+			love.graphics.print(k.." - ", 20 * current_map.tile_size, (k + 1) * current_map.tile_size)
+			love.graphics.print(self.equipment[k].name, 24 * current_map.tile_size, (k + 1) * current_map.tile_size)
 		end
 	end,
 	
 	Rest = function(self)
-		self.turn_timer = self.turn_timer + (resources.one_turn)
+		self.turn_timer = self.turn_timer + (one_turn)
 		self.myTurn = false
 		self.stamina = self.stamina + 10
 		self.satiety = self.satiety - 1

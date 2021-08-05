@@ -1,5 +1,4 @@
 Entity = require "classes.Entity"
-resources = require "modules.resources"
 
 local tools = {
 	CopyTable = function(table)
@@ -57,7 +56,7 @@ local tools = {
 	ElementalSpawn = function()
 		local threshold1 = 30
 		local threshold2 = 10
-		local current_map = resources.current_map
+		local current_map = current_map
 
 		if current_map.elemental_balance.fire > threshold1 then
 			tools.MakeEntities(mob_db.fire_slime, 1)
@@ -100,13 +99,13 @@ local tools = {
 			m:RandomMap("volcano")
 		end
 		m:MemoryInit()
-		resources.current_map = m
+		current_map = m
 	end,
 
 	TowerLevelInit = function()
-		for i = 1, resources.tower_height do
-			resources.world_spawn_memory[i] = {}
-			resources.world_map_memory[i] = {}
+		for i = 1, tower_height do
+			world_spawn_memory[i] = {}
+			world_map_memory[i] = {}
 		end
 	end
 }
