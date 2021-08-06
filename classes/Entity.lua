@@ -19,7 +19,7 @@ Entity = {
 
 	attack = 1,
 	defense = 0,
-	speed = 10,
+	move_speed = 10,
 
 	strength = 1,
 	exercise_strength = 0,
@@ -180,7 +180,7 @@ Entity = {
 			self.position.x = self.position.x + dx
 			self.position.y = self.position.y + dy
 
-			self.turn_timer = self.turn_timer + (one_turn / self.speed)
+			self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
 			self.turn_counter = self.turn_counter + 1
 			self.myTurn = false
 
@@ -225,7 +225,7 @@ Entity = {
 			print(self.name.." inventory full")
 		end
 
-		self.turn_timer = self.turn_timer + (one_turn / self.speed)
+		self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
 		self.myTurn = false
 		tools.TimerTick()
 	end,
@@ -266,11 +266,11 @@ Entity = {
 					table.insert(self.equipment, v)
 					table.remove(self.inventory, k)
 					print("Equip is adding stats")
-					print("pre-equip stats: "..self.attack..", "..self.defense..", "..self.speed)
+					print("pre-equip stats: "..self.attack..", "..self.defense..", "..self.move_speed)
 					self.attack = self.attack + v.attack
 					self.defense = self.defense + v.defense
-					self.speed = self.speed + v.speed
-					print("post-equip: "..self.attack..", "..self.defense..", "..self.speed)
+					self.move_speed = self.speed + v.speed
+					print("post-equip: "..self.attack..", "..self.defense..", "..self.move_speed)
 				end
 			end
 			query_substate = nil
@@ -288,11 +288,11 @@ Entity = {
 				table.insert(self.inventory, v)
 				table.remove(self.equipment, k)
 				print("Unequip is subtracting stats")
-				print("pre-unequip stats: "..self.attack..", "..self.defense..", "..self.speed)
+				print("pre-unequip stats: "..self.attack..", "..self.defense..", "..self.move_speed)
 				self.attack = self.attack - v.attack
 				self.defense = self.defense - v.defense
-				self.speed = self.speed - v.speed
-				print("post-unequip: "..self.attack..", "..self.defense..", "..self.speed)
+				self.move_speed = self.speed - v.speed
+				print("post-unequip: "..self.attack..", "..self.defense..", "..self.move_speed)
 			end
 		end
 		query_substate = nil
@@ -302,7 +302,7 @@ Entity = {
 	Bump = function(self, target)
 		target:ChangeHP(-self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
-		self.turn_timer = self.turn_timer + (one_turn / self.speed)
+		self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
 		self.myTurn = false
 		self.turn_counter = self.turn_counter + 1
 		tools.TimerTick()
@@ -377,6 +377,33 @@ Entity = {
 		end
 		self.satiety = self.satiety + target.nourishment
 		print(self.name.." eats "..target.name)
+	end,
+
+	GetClosestEntity = function(self)
+		local distances = {}
+		local shortest_distance = nil
+		local closest_entity = {}
+
+		for i = 1, #spawn_table do
+			distances[i] = self:DistToEntity(spawn_table[i])
+		end
+
+		shortest_distance = math.min(distances)
+		
+		for i = 1, #spawn_table do
+			if self:DistToEntity(spawn_table[i]) == shortest_distance then
+				closest_entity = spawn_table[i]
+				return closest_entity
+			end
+		end
+	end,
+
+	GetDirectionToEntity = function(self, target)
+		
+	end,
+
+	DropEmitter = function(self, emitter_type)
+
 	end,
 
 	SeekFood = function(self, target)
