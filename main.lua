@@ -35,7 +35,6 @@ query_substate = nil
 -- init
 math.randomseed(os.time() - (os.clock() * 1000))
 
-
 tools.NewLevel()
 
 mob_db.Player:Spawn()
@@ -100,7 +99,8 @@ function love.keyreleased(k)
 			else
 				tower_level = tower_level - 1
 				current_map = world_map_memory[tower_level]
-				spawn_table = world_spawn_memory[tower_level]	
+				spawn_table = world_spawn_memory[tower_level]
+				mob_db.Player.turn_counter = mob_db.Player.turn_counter + 1
 				for i = 1, current_map.board_size.x do
 					for j = 1, current_map.board_size.y do
 						if current_map.map_table[i][j] == "<" then
@@ -115,6 +115,7 @@ function love.keyreleased(k)
 			world_spawn_memory[tower_level] = spawn_table
 			tower_level = tower_level + 1
 			tools.NewLevel()
+			mob_db.Player.turn_counter = mob_db.Player.turn_counter + 1
 			for i = 1, current_map.board_size.x do
 				for j = 1, current_map.board_size.y do
 					if current_map.map_table[i][j] == ">" then
@@ -309,6 +310,7 @@ function love.draw()
 		love.graphics.print("Satiety: "..mob_db.Player.satiety.."/100", ts * 10, ts * 22)
 
 		love.graphics.print("Tower Level: "..tower_level, ts * 23, ts * 22)
+		love.graphics.print("Turn: "..mob_db.Player.turn_counter, ts * 23, ts * 23)
 
 	elseif game_state == "inventory" then
 		love.graphics.setColor(255,255,255)
@@ -331,7 +333,7 @@ function love.update(dt)
 	-- basic "AI"
 	for k,v in pairs(spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
-			if math.random(0,1) >= v.laziness then
+			if math.random(0,1) >= v.lumpiness then
 				v:Wander()
 			else
 				v:Rest()
@@ -350,6 +352,8 @@ function love.update(dt)
 			if v.turn_timer <= 0 then
 				v.turn_timer = 0
 				v.myTurn = true
+				if v.name == "Player" then
+				end
 				break
 			end
 		end

@@ -12,6 +12,7 @@ Entity = {
 
 	turn_timer = 0,
 	myTurn = false,
+	turn_counter = 1,
 
 	inventory = {},
 	equipment = {},
@@ -32,27 +33,33 @@ Entity = {
 		air = 0
 	},
 	elemental_max = {
-		fire = 0,
-		earth = 0,
-		water = 0,
-		wood = 0,
-		metal = 0,
-		air = 0
+		fire = 10,
+		earth = 10,
+		water = 10,
+		wood = 10,
+		metal = 10,
+		air = 10
 	},
 
 	can_see = true,
 	sight_dist = 5,
+	stealthiness = 1,
+
 	can_smell = true,
 	smell_dist = 5,
+	stinkiness = 1,
+
 	can_hear = true,
 	hear_dist = 5,
+	loudness = 1,
 
 	satiety = 100,
 	nourishment = 10,
 	is_food = true,
+	metabolic_rate = 1,
+	
 	stamina = 100,
-
-	laziness = 0.5,
+	lumpiness = 0.5,
 
 	Spawn = function(self)
 		table.insert(spawn_table, self)
@@ -159,9 +166,10 @@ Entity = {
 			self.position.y = self.position.y + dy
 
 			self.turn_timer = self.turn_timer + (one_turn / self.speed)
+			self.turn_counter = self.turn_counter + 1
 			self.myTurn = false
 
-			self.satiety = self.satiety - 1
+			self.satiety = self.satiety - (0.1 * self.metabolic_rate)
 
 			if self.name == "Player" then 
 				tools.TimerTick()
@@ -170,6 +178,10 @@ Entity = {
 		elseif self.myTurn then
 			
 		end
+	end,
+
+	MakeNoise = function(self, amount)
+
 	end,
 
 	Wander = function(self)
@@ -277,6 +289,7 @@ Entity = {
 		print(target.name .. "'s HP is now "..target.hp_current)
 		self.turn_timer = self.turn_timer + (one_turn / self.speed)
 		self.myTurn = false
+		self.turn_counter = self.turn_counter + 1
 		tools.TimerTick()
 	end,
 
@@ -303,6 +316,7 @@ Entity = {
 		self.myTurn = false
 		self.stamina = self.stamina + 10
 		self.satiety = self.satiety - 1
+		self.turn_counter = self.turn_counter + 1
 		print(self.name.." rests")
 	end,
 
