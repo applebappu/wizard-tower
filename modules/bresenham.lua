@@ -33,7 +33,7 @@ local bresenham = {
 				err = err + dx
 				y0 = y0 + sy
 			end
-
+			
 			table.insert(line_content, current_map.map_table[x0][y0])
 		end
 		return line_content

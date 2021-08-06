@@ -28,6 +28,7 @@ one_turn = 100
 
 spawn_timer = 0
 element_timer = 0
+global_timer = 0
 
 game_state = "main"
 query_substate = nil
@@ -299,7 +300,7 @@ function love.draw()
 		-- draw GUI
 		local ts = current_map.tile_size
 		love.graphics.setColor(255,255,255)
-		love.graphics.print("HP: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, ts, ts * 22)
+		love.graphics.print("Health: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, ts, ts * 22)
 		love.graphics.print("Fire: "..mob_db.Player.elemental_balance.fire.."/"..mob_db.Player.elemental_max.fire, ts, ts * 23)
 		love.graphics.print("Earth: "..mob_db.Player.elemental_balance.earth.."/"..mob_db.Player.elemental_max.earth, ts, ts * 24)
 		love.graphics.print("Wood: "..mob_db.Player.elemental_balance.wood.."/"..mob_db.Player.elemental_max.wood, ts, ts * 25)
@@ -307,10 +308,38 @@ function love.draw()
 		love.graphics.print("Metal: "..mob_db.Player.elemental_balance.metal.."/"..mob_db.Player.elemental_max.metal, ts, ts * 27)
 		love.graphics.print("Air: "..mob_db.Player.elemental_balance.air.."/"..mob_db.Player.elemental_max.air, ts, ts * 28)
 
-		love.graphics.print("Satiety: "..mob_db.Player.satiety.."/100", ts * 10, ts * 22)
+		love.graphics.print("Strength: "..mob_db.Player.strength, ts * 12, ts * 22)
+		love.graphics.print("Toughness: "..mob_db.Player.toughness, ts * 12, ts * 23)
+		love.graphics.print("Concentration: "..mob_db.Player.concentration, ts * 12, ts * 24)
+		love.graphics.print("Mobility: "..mob_db.Player.concentration, ts * 12, ts * 25)
+		love.graphics.print("Mind: "..mob_db.Player.concentration, ts * 12, ts * 26)
 
-		love.graphics.print("Tower Level: "..tower_level, ts * 23, ts * 22)
-		love.graphics.print("Turn: "..mob_db.Player.turn_counter, ts * 23, ts * 23)
+		love.graphics.print("Tower Level: "..tower_level, ts * 24, ts * 22)
+		if mob_db.Player.satiety == 125 then
+			love.graphics.print("Satiety: Stuffed!", ts * 24, ts * 23)
+		elseif mob_db.Player.satiety >= 100 then
+			love.graphics.print("Satiety: Full", ts * 24, ts * 23)
+		elseif mob_db.Player.satiety >= 75 then
+			love.graphics.print("Satiety: Good", ts * 24, ts * 23)
+		elseif mob_db.Player.satiety >= 50 then
+			love.graphics.print("Satiety: Hungry", ts * 24, ts * 23)
+		elseif mob_db.Player.satiety >= 25 then
+			love.graphics.print("Satiety: Hungry!", ts * 24, ts * 23)
+		elseif mob_db.Player.satiety == 0 then
+			love.graphics.print("Satiety: Starving!", ts * 24, ts * 23)
+		end
+
+		if mob_db.Player.stamina == 100 then
+			love.graphics.print("Stamina: Full", ts * 24, ts * 24)
+		elseif mob_db.Player.satiety >= 75 then
+			love.graphics.print("Stamina: Good", ts * 24, ts * 24)
+		elseif mob_db.Player.satiety >= 50 then
+			love.graphics.print("Stamina: Tired", ts * 24, ts * 24)
+		elseif mob_db.Player.satiety >= 25 then
+			love.graphics.print("Stamina: Tired!", ts * 24, ts * 24)
+		elseif mob_db.Player.satiety == 0 then
+			love.graphics.print("Stamina: Exhausted!", ts * 24, ts * 24)
+		end
 
 	elseif game_state == "inventory" then
 		love.graphics.setColor(255,255,255)
@@ -364,9 +393,31 @@ function love.update(dt)
 		tools.ElementalSpawn()
 		spawn_timer = spawn_timer - 20
 	end
+
 	while element_timer > 5 do
 		current_map:TileElements()
 		element_timer = element_timer - 5
 	end
 
+	-- stat increases
+	local x = global_timer / 100
+	if x == 1 then
+		local p = mob_db.Player
+		local dice = math.random(0,100)
+		if dice < p.exercise_strength then
+			p.strength = p.strength + 1
+		end
+		if dice < p.exercise_toughness then
+			p.toughness = p.toughness + 1
+		end
+		if dice < p.exercise_concentration then
+			p.concentration = p.concentration + 1
+		end
+		if dice < p.exercise_mobility then
+			p.mobility = p.mobility + 1
+		end
+		if dice < p.exercise_mind then
+			p.mind = p.mind + 1
+		end
+	end
 end

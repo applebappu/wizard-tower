@@ -104,7 +104,8 @@ local tools = {
 
 	TimerTick = function()
 		spawn_timer = spawn_timer + 1
-		element_timer = element_timer + 1	
+		element_timer = element_timer + 1
+		global_timer = global_timer + 1	
 	end
 }
 

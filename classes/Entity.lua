@@ -21,6 +21,19 @@ Entity = {
 	defense = 0,
 	speed = 10,
 
+	strength = 1,
+	exercise_strength = 0,
+	toughness = 1,
+	exercise_toughness = 0,
+	concentration = 1,
+	exercise_concentration = 0,
+	mobility = 1,
+	exercise_mobility = 0,
+	mind = 1,
+	exercise_mind = 0,
+	
+	spark_chance = 0,
+
 	entity_type = nil,
 
 	element = "air",
@@ -59,7 +72,7 @@ Entity = {
 	metabolic_rate = 1,
 	
 	stamina = 100,
-	lumpiness = 0.5,
+	lumpiness = 0.2,
 
 	Spawn = function(self)
 		table.insert(spawn_table, self)
@@ -74,7 +87,9 @@ Entity = {
 
 		current_map:InfuseElements(-f,-e,-wa,-wd,-me,-a)
 		
-		current_map.map_table[self.position.x][self.position.y] = "."
+		if current_map.map_table[self.position.x][self.position.y] == "#" then
+			current_map.map_table[self.position.x][self.position.y] = "."
+		end
 	end,
 
 	Die = function(self)
@@ -362,6 +377,10 @@ Entity = {
 		end
 		self.satiety = self.satiety + target.nourishment
 		print(self.name.." eats "..target.name)
+	end,
+
+	SeekFood = function(self, target)
+		
 	end
 }
 
