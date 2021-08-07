@@ -1,5 +1,5 @@
 local bresenham = {
-	line = function(x0, y0, x1, y1)
+	line = function(x0, y0, x1, y1, mode)
 		local dx, dy, sx, sy
 		
 		if x0 < x1 then
@@ -20,10 +20,16 @@ local bresenham = {
 
 		local err, e2 = dx - dy, nil
 		local line_content = {}
+		
+		local first_step = true
+		local direction = {
+			x = nil, 
+			y = nil
+		}
 
 		while not (x0 == x1 and y0 == y1) do
 			e2 = err + err
-			
+
 			if e2 > -dy then
 				err = err - dy
 				x0 = x0 + sx
@@ -33,10 +39,21 @@ local bresenham = {
 				err = err + dx
 				y0 = y0 + sy
 			end
+
+			if first_step then
+				direction.x = x0
+				direction.y = y0
+				first_step = false
+			end
 			
 			table.insert(line_content, current_map.map_table[x0][y0])
 		end
-		return line_content
+
+		if mode == "los" then
+			return line_content
+		elseif mode == "direction" then
+			return direction
+		end
 	end
 }
 

@@ -154,7 +154,7 @@ Entity = {
 		
 		for k, v in pairs(spawn_table) do
 			if test_x == v.position.x and test_y == v.position.y and v ~= self then
-				if v.entity_type == "mob" then
+				if v.entity_type == "mob" or v.entity_type == "Player" then
 					print("canMove says Bump!")
 					self:Bump(v)
 					return test_value
@@ -347,7 +347,7 @@ Entity = {
 	end,
 
 	LineOfSight = function(self, x, y)
-		local los_table = bresenham.line(self.position.x, self.position.y, x, y)
+		local los_table = bresenham.line(self.position.x, self.position.y, x, y, "los")
 		local onemore = false
 
 		for i = 1, #los_table do
@@ -399,16 +399,46 @@ Entity = {
 	end,
 
 	GetDirectionToEntity = function(self, target)
-		
-	end,
+		local entity = nil
 
-	DropEmitter = function(self, emitter_type)
+		for k,v in pairs(spawn_table) do
+			if v.name == target.name then
+				entity = target
+			end
+		end
 
-	end,
+		local direction = bresenham.line(self.position.x, self.position.y, entity.position.x, entity.position.y, "direction")
 
-	SeekFood = function(self, target)
-		
+		step_to_take = {
+			x = direction.x - self.position.x,
+			y = direction.y - self.position.y
+		}
+		print(step_to_take.x, step_to_take.y)
+		return step_to_take
 	end
+--[[
+	FindPathToEntity = function(self, target)
+		local initial_step = GetDirectionToEntity(self, target)
+		local second_try = {
+			x = , 
+			y =
+		}
+		local third_try = {
+			x = , 
+			y = 
+		}
+		
+		if self:canMove(initial_step.x, initial_step.y) then
+			self:Move(initial_step.x, initial_step.y)
+		elseif self:canMove(second_try.x, second_try.y) then
+			self:Move(second_try.x, second_try.y)
+		elseif self:canMove(third_try.x, third_try.y) then
+			self:Move(third_try.x, third_try.y)
+		else
+			self:Rest() -- for now
+		end 
+	end
+]]--
 }
 
 Entity.__index = Entity

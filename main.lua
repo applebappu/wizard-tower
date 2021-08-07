@@ -49,6 +49,7 @@ for i = 1, current_map.board_size.x do
 end
 
 item_db.cheeseburger:Spawn()
+mob_db.Player:GetDirectionToEntity(item_db.cheeseburger)
 
 function love.keyreleased(k)
 	if k == "escape" then
@@ -363,7 +364,12 @@ function love.update(dt)
 	for k,v in pairs(spawn_table) do
 		if v.myTurn and v.entity_type == "mob" then
 			if math.random(0,1) >= v.lumpiness then
-				v:Wander()
+				if v:LineOfSight(mob_db.Player.position.x, mob_db.Player.position.y) then
+					local step = v:GetDirectionToEntity(mob_db.Player)
+					v:Move(step.x, step.y)
+				else
+					v:Wander()
+				end
 			else
 				v:Rest()
 			end
