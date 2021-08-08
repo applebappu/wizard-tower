@@ -48,7 +48,7 @@ item_db.weapon.char = "/"
 item_db.weapon.element = "metal"
 item_db.weapon.elemental_balance.metal = 5
 
-item_db.rapier = tools.CopyTable(weapon)
+item_db.rapier = tools.CopyTable(item_db.weapon)
 item_db.rapier.attack = 2
 item_db.rapier.defense = 1
 
