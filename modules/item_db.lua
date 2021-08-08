@@ -33,12 +33,24 @@ item_db.air_glyph.element = "air"
 item_db.air_glyph.elemental_balance.air = 10
 
 -- FOOD --
-item_db.cheeseburger = tools.CopyTable(Entity)
+item_db.food = tools.CopyTable(Entity)
+item_db.food.char = "%"
+item_db.food.element = "earth"
+item_db.food.elemental_balance.earth = 5
+
+item_db.cheeseburger = tools.CopyTable(item_db.food)
 item_db.cheeseburger.name = "cheeseburger"
-item_db.cheeseburger.char = "%"
-item_db.cheeseburger.element = "earth"
-item_db.cheeseburger.elemental_balance.earth = 5
 item_db.cheeseburger.nourishment = 50
+
+-- WEAPONS --
+item_db.weapon = tools.CopyTable(Entity)
+item_db.weapon.char = "/"
+item_db.weapon.element = "metal"
+item_db.weapon.elemental_balance.metal = 5
+
+item_db.rapier = tools.CopyTable(weapon)
+item_db.rapier.attack = 2
+item_db.rapier.defense = 1
 
 for k,v in pairs(item_db) do
 	v.entity_type = "item"

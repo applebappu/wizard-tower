@@ -48,9 +48,6 @@ for i = 1, current_map.board_size.x do
 	end				
 end
 
-item_db.cheeseburger:Spawn()
-mob_db.Player:GetDirectionToEntity(item_db.cheeseburger)
-
 function love.keyreleased(k)
 	if k == "escape" then
 		if query_substate ~= nil then

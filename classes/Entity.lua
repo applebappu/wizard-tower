@@ -269,7 +269,7 @@ Entity = {
 					print("pre-equip stats: "..self.attack..", "..self.defense..", "..self.move_speed)
 					self.attack = self.attack + v.attack
 					self.defense = self.defense + v.defense
-					self.move_speed = self.speed + v.speed
+					self.move_speed = self.speed + v.move_speed
 					print("post-equip: "..self.attack..", "..self.defense..", "..self.move_speed)
 				end
 			end
