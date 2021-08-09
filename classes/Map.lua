@@ -121,6 +121,10 @@ Map = {
 				end
 			end
 		end
+		if self.elemental_balance.air > 10 then
+			-- infuse air into the other elements afterwards
+			self:InfuseElements(1, 1, 1, 1, 1, -5)
+		end
 		current_map:PrintElements()	
 	end
 }

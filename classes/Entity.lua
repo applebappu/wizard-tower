@@ -59,11 +59,11 @@ Entity = {
 	sight_dist = 5,
 	stealthiness = 1,
 
-	can_smell = true,
+	can_smell = false,
 	smell_dist = 5,
 	stinkiness = 1,
 
-	can_hear = true,
+	can_hear = false,
 	hear_dist = 5,
 	loudness = 1,
 
@@ -89,7 +89,7 @@ Entity = {
 		current_map:InfuseElements(-f,-e,-wa,-wd,-me,-a)
 		
 		if current_map.map_table[self.position.x][self.position.y] == "#" then
-			current_map.map_table[self.position.x][self.position.y] = "."
+			current_map.map_table[self.position.x][self.position.y] = "." -- temporary fix
 		end
 	end,
 
@@ -409,36 +409,26 @@ Entity = {
 
 		local direction = bresenham.line(self.position.x, self.position.y, entity.position.x, entity.position.y, "direction")
 
-		step_to_take = {
+		local step_to_take = {
 			x = direction.x - self.position.x,
 			y = direction.y - self.position.y
 		}
 		print(step_to_take.x, step_to_take.y)
 		return step_to_take
-	end
---[[
-	FindPathToEntity = function(self, target)
-		local initial_step = GetDirectionToEntity(self, target)
-		local second_try = {
-			x = , 
-			y =
-		}
-		local third_try = {
-			x = , 
-			y = 
-		}
-		
-		if self:canMove(initial_step.x, initial_step.y) then
-			self:Move(initial_step.x, initial_step.y)
-		elseif self:canMove(second_try.x, second_try.y) then
-			self:Move(second_try.x, second_try.y)
-		elseif self:canMove(third_try.x, third_try.y) then
-			self:Move(third_try.x, third_try.y)
+	end,
+
+	Meditate = function(self)
+		if current_map.elemental_balance.air >= 1 and mob_db.Player.elemental_balance.air < mob_db.Player.elemental_max.air then
+			self:ChangeElements(0,0,0,0,0,1)
+			current_map:InfuseElements(0,0,0,0,0,-1)
+			print(self.name.." meditates")
 		else
-			self:Rest() -- for now
-		end 
+			print(self.name.." tries to meditate, but fails")
+		end
+		self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
+		self.myTurn = false
+		tools.TimerTick()
 	end
-]]--
 }
 
 Entity.__index = Entity

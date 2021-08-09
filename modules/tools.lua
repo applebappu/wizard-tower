@@ -45,8 +45,8 @@ local tools = {
 		
 		for i = 1, iterations do
 			mobs[i] = tools.CopyTable(target)
-			mobs[i].position.x = math.random(2,37)
-			mobs[i].position.y = math.random(2,19)
+			mobs[i].position.x = math.random(3,36)
+			mobs[i].position.y = math.random(3,18)
 		end
 		for i = 1, #mobs do
 			mobs[i]:Spawn()
@@ -56,7 +56,6 @@ local tools = {
 	ElementalSpawn = function()
 		local threshold1 = 30
 		local threshold2 = 10
-		local current_map = current_map
 
 		if current_map.elemental_balance.fire > threshold1 then
 			tools.MakeEntities(mob_db.fire_slime, 1)

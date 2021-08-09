@@ -85,7 +85,7 @@ function love.keyreleased(k)
 		elseif k == "i" then
 			game_state = "inventory"
 		elseif k == "m" then
-			-- meditate
+			mob_db.Player:Meditate()
 		elseif k == "b" then
 			-- spellbook
 		end
@@ -244,7 +244,7 @@ end
 
 function love.draw()
 	if game_state == "main" then
-		-- draw map memory
+		-- draw map memory --
 		love.graphics.setColor(100/255,100/255,100/255,255/255)
 		for i = 1, current_map.board_size.x do
 			for j = 1, current_map.board_size.y do
@@ -252,7 +252,7 @@ function love.draw()
 			end
 		end
 
-		-- draw map
+		-- draw map --
 		for i = 1, current_map.board_size.x do
 			for j = 1, current_map.board_size.y do
 				if mob_db.Player:LineOfSight(i, j) and mob_db.Player:DistToPoint(i, j) <= mob_db.Player.sight_dist then
@@ -290,7 +290,7 @@ function love.draw()
 			end
 		end
 
-		-- draw entities 
+		-- draw entities --
 		for k,v in pairs(spawn_table) do
 			if v.element == "fire" then
 				love.graphics.setColor(255/255,0/255,0/255)
@@ -311,23 +311,36 @@ function love.draw()
 			end
 		end
 
-		-- draw GUI
+		-- draw GUI --
 		local ts = current_map.tile_size
-		love.graphics.setColor(255,255,255)
+		-- HP
+		local hp_ratio = mob_db.Player.hp_current / mob_db.Player.hp_max
+		if hp_ratio == 1 then
+			love.graphics.setColor(0/255,255/255,0/255) 
+		elseif hp_ratio >= 0.5 then
+			love.graphics.setColor(255/255,255/255,0/255)
+		elseif hp_ratio >= 0.25 then
+			love.graphics.setColor(255/255,165/255,0/255)
+		elseif hp_ratio >= 0.1 then
+			love.graphics.setColor(255/255,0/255,0/255)
+		end 
 		love.graphics.print("Health: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, ts, ts * 22)
+		
+		-- elements
+		love.graphics.setColor(255/255,255/255,255/255)
 		love.graphics.print("Fire: "..mob_db.Player.elemental_balance.fire.."/"..mob_db.Player.elemental_max.fire, ts, ts * 23)
 		love.graphics.print("Earth: "..mob_db.Player.elemental_balance.earth.."/"..mob_db.Player.elemental_max.earth, ts, ts * 24)
 		love.graphics.print("Wood: "..mob_db.Player.elemental_balance.wood.."/"..mob_db.Player.elemental_max.wood, ts, ts * 25)
 		love.graphics.print("Water: "..mob_db.Player.elemental_balance.water.."/"..mob_db.Player.elemental_max.water, ts, ts * 26)
 		love.graphics.print("Metal: "..mob_db.Player.elemental_balance.metal.."/"..mob_db.Player.elemental_max.metal, ts, ts * 27)
 		love.graphics.print("Air: "..mob_db.Player.elemental_balance.air.."/"..mob_db.Player.elemental_max.air, ts, ts * 28)
-
+		-- stats
 		love.graphics.print("Strength: "..mob_db.Player.strength, ts * 12, ts * 22)
 		love.graphics.print("Toughness: "..mob_db.Player.toughness, ts * 12, ts * 23)
 		love.graphics.print("Concentration: "..mob_db.Player.concentration, ts * 12, ts * 24)
 		love.graphics.print("Mobility: "..mob_db.Player.concentration, ts * 12, ts * 25)
 		love.graphics.print("Mind: "..mob_db.Player.concentration, ts * 12, ts * 26)
-
+		-- tower level and misc (satiety, stam, etc)
 		love.graphics.print("Tower Level: "..tower_level, ts * 24, ts * 22)
 		if mob_db.Player.satiety == 125 then
 			love.graphics.print("Satiety: Stuffed!", ts * 24, ts * 23)
