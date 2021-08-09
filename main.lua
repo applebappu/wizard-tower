@@ -52,7 +52,7 @@ function love.keyreleased(k)
 	if k == "escape" then
 		if query_substate ~= nil then
 			query_substate = nil
-		elseif game_state ~= "main" then
+		elseif game_state ~= "main" and game_state ~= "game over" then
 			game_state = "main"
 		else
 			love.event.quit()
@@ -126,7 +126,7 @@ function love.keyreleased(k)
 				tools.NewLevel()
 			else
 				-- restore whatever was at the level before
-				current_map = world_map_memory[tower_level] -- not assigning correctly due to logic on down stairs above
+				current_map = world_map_memory[tower_level] 
 				spawn_table = world_spawn_memory[tower_level]
 			end
 
@@ -317,11 +317,11 @@ function love.draw()
 		local hp_ratio = mob_db.Player.hp_current / mob_db.Player.hp_max
 		if hp_ratio >= 0.9 then
 			love.graphics.setColor(0/255,255/255,0/255) 
-		elseif hp_ratio >= 0.7 then
-			love.graphics.setColor(255/255,255/255,0/255)
 		elseif hp_ratio >= 0.5 then
+			love.graphics.setColor(255/255,255/255,0/255)
+		elseif hp_ratio >= 0.2 then
 			love.graphics.setColor(255/255,165/255,0/255)
-		elseif hp_ratio <= 0.25 then
+		elseif hp_ratio >= 0 then
 			love.graphics.setColor(255/255,0/255,0/255)
 		end
 		love.graphics.print("Health: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, ts, ts * 22)
@@ -382,6 +382,9 @@ function love.draw()
 		elseif query_substate == "consume" then
 			love.graphics.print("Consume which item?", current_map.tile_size, 20 * current_map.tile_size)
 		end
+	elseif game_state == "game over" then
+		love.graphics.setColor(255/255,0/255,0/255)
+		love.graphics.print("YOU DIED", 350, 200)
 	end
 end
 

@@ -96,18 +96,22 @@ Entity = {
 	Die = function(self)
 		for k, v in pairs(spawn_table) do
 			if v == self then
-				table.remove(spawn_table, k)
-				souls = souls + 1
-
-				local a = self.elemental_balance
-				current_map:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
-
-				for k,v in pairs(current_map.elemental_balance) do
-					print(k,v)
-				end
-
-				for k,v in pairs(self.inventory) do
-					self:Drop("all")
+				if v.entity_type ~= "Player" then
+					table.remove(spawn_table, k)
+					souls = souls + 1
+	
+					local a = self.elemental_balance
+					current_map:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
+	
+					for k,v in pairs(current_map.elemental_balance) do
+						print(k,v)
+					end
+	
+					for k,v in pairs(self.inventory) do
+						self:Drop("all")
+					end
+				else
+					game_state = "game over"
 				end
 			end
 		end

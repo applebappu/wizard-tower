@@ -54,11 +54,11 @@ local tools = {
 	end,
 
 	ElementalSpawn = function()
-		local threshold1 = 30
-		local threshold2 = 10
+		local threshold1 = 10
+		local threshold2 = 20
 
 		if current_map.elemental_balance.fire > threshold1 then
-			tools.MakeEntities(mob_db.fire_slime, 1)
+			tools.MakeEntities(mob_db.goblin, 1)
 		elseif current_map.elemental_balance.fire > threshold2 then
 			
 		end
@@ -75,16 +75,15 @@ local tools = {
 		end
  
 		if current_map.elemental_balance.wood > threshold1 then
-			tools.MakeEntities(mob_db.wood_slime, 1)
+			tools.MakeEntities(mob_db.fairy, 1)
 		elseif current_map.elemental_balance.wood > threshold2 then
 		end
 		
 		if current_map.elemental_balance.metal > threshold1 then
-			tools.MakeEntities(mob_db.metal_slime, 1)
+			tools.MakeEntities(mob_db.robot, 1)
 		elseif current_map.elemental_balance.metal > threshold2 then
+			tools.MakeEntities(item_db.rapier, 1)
 		end
-
-		current_map:PrintElements()
 	end,
 
 	NewLevel = function()

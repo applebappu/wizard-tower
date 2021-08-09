@@ -15,21 +15,21 @@ mob_db.slime = tools.CopyTable(Entity)
 mob_db.slime.name = "slime"
 mob_db.slime.char = "s"
 
-mob_db.fire_slime = tools.CopyTable(mob_db.slime)
-mob_db.fire_slime.element = "fire"
-mob_db.fire_slime.elemental_balance.fire = 5
-
 mob_db.water_slime = tools.CopyTable(mob_db.slime)
 mob_db.water_slime.element = "water"
-mob_db.water_slime.elemental_balance.water = 5
-
-mob_db.wood_slime = tools.CopyTable(mob_db.slime)
-mob_db.wood_slime.element = "wood"
-mob_db.wood_slime.elemental_balance.wood = 5
+mob_db.water_slime.elemental_balance.water = 10
 
 mob_db.metal_slime = tools.CopyTable(mob_db.slime)
 mob_db.metal_slime.element = "metal"
-mob_db.metal_slime.elemental_balance.metal = 5
+mob_db.metal_slime.elemental_balance.metal = 10
+
+-- GOBLINS --
+mob_db.goblin = tools.CopyTable(Entity)
+mob_db.goblin.name = "goblin"
+mob_db.goblin.char = "g"
+mob_db.goblin.element = "fire"
+mob_db.goblin.elemental_balance.fire = 10
+mob_db.goblin.lumpiness = 0
 
 -- KOBOLDS --
 mob_db.kobold = tools.CopyTable(Entity)
@@ -37,6 +37,23 @@ mob_db.kobold.name = "kobold"
 mob_db.kobold.char = "k"
 mob_db.kobold.element = "earth"
 mob_db.kobold.elemental_balance.earth = 10
+mob_db.kobold.lumpiness = 0
+
+-- FAIRIES --
+mob_db.fairy = tools.CopyTable(Entity)
+mob_db.fairy.name = "fairy"
+mob_db.fairy.char = "f"
+mob_db.fairy.element = "wood"
+mob_db.fairy.elemental_balance.wood = 10
+mob_db.fairy.lumpiness = 0
+
+-- ROBOTS --
+mob_db.robot = tools.CopyTable(Entity)
+mob_db.robot.name = "robot"
+mob_db.robot.char = "r"
+mob_db.robot.element = "metal"
+mob_db.robot.elemental_balance.metal = 10
+mob_db.robot.lumpiness = 0
 
 for k,v in pairs(mob_db) do
 	v.entity_type = "mob"
