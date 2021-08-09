@@ -20,7 +20,7 @@ current_map = {}
 tower_level = 1
 world_map_memory = {}
 world_map_memory[1] = {}
-tower_height = 10
+tower_height = 1
 
 souls = 0
 
@@ -92,6 +92,10 @@ function love.keyreleased(k)
 		
 		-- changing levels
 		if k == "." and current_map.map_table[mob_db.Player.position.x][mob_db.Player.position.y] == ">" then
+			-- store level in memory
+			world_map_memory[tower_level] = current_map
+			world_spawn_memory[tower_level] = spawn_table
+			
 			if tower_level == 1 then
 				print("leaving the tower")
 				love.event.quit()
@@ -110,10 +114,22 @@ function love.keyreleased(k)
 				end
 			end
 		elseif k == "," and current_map.map_table[mob_db.Player.position.x][mob_db.Player.position.y] == "<" then
+			-- store level in memory
 			world_map_memory[tower_level] = current_map
 			world_spawn_memory[tower_level] = spawn_table
+			-- go up a level
 			tower_level = tower_level + 1
-			tools.NewLevel()
+			-- if we're at the top,
+			if tower_level > tower_height then
+				-- make the top taller and make a new level
+				tower_height = tower_height + 1
+				tools.NewLevel()
+			else
+				-- restore whatever was at the level before
+				current_map = world_map_memory[tower_level] -- not assigning correctly due to logic on down stairs above
+				spawn_table = world_spawn_memory[tower_level]
+			end
+
 			mob_db.Player.turn_counter = mob_db.Player.turn_counter + 1
 			for i = 1, current_map.board_size.x do
 				for j = 1, current_map.board_size.y do

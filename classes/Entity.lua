@@ -18,6 +18,7 @@ Entity = {
 	equipment = {},
 
 	attack = 1,
+	attack_speed = 10,
 	defense = 0,
 	move_speed = 10,
 
@@ -266,11 +267,10 @@ Entity = {
 					table.insert(self.equipment, v)
 					table.remove(self.inventory, k)
 					print("Equip is adding stats")
-					print("pre-equip stats: "..self.attack..", "..self.defense..", "..self.move_speed)
 					self.attack = self.attack + v.attack
+					self.attack_speed = self.attack_speed + v.attack_speed
 					self.defense = self.defense + v.defense
 					self.move_speed = self.speed + v.move_speed
-					print("post-equip: "..self.attack..", "..self.defense..", "..self.move_speed)
 				end
 			end
 			query_substate = nil

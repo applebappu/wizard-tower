@@ -51,6 +51,7 @@ item_db.weapon.elemental_balance.metal = 5
 item_db.rapier = tools.CopyTable(item_db.weapon)
 item_db.rapier.attack = 2
 item_db.rapier.defense = 1
+item_db.rapier.attack_speed = 5
 
 for k,v in pairs(item_db) do
 	v.entity_type = "item"
