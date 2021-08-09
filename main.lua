@@ -315,15 +315,15 @@ function love.draw()
 		local ts = current_map.tile_size
 		-- HP
 		local hp_ratio = mob_db.Player.hp_current / mob_db.Player.hp_max
-		if hp_ratio == 1 then
+		if hp_ratio >= 0.9 then
 			love.graphics.setColor(0/255,255/255,0/255) 
-		elseif hp_ratio >= 0.5 then
+		elseif hp_ratio >= 0.7 then
 			love.graphics.setColor(255/255,255/255,0/255)
-		elseif hp_ratio >= 0.25 then
+		elseif hp_ratio >= 0.5 then
 			love.graphics.setColor(255/255,165/255,0/255)
-		elseif hp_ratio >= 0.1 then
+		elseif hp_ratio <= 0.25 then
 			love.graphics.setColor(255/255,0/255,0/255)
-		end 
+		end
 		love.graphics.print("Health: "..mob_db.Player.hp_current.."/"..mob_db.Player.hp_max, ts, ts * 22)
 		
 		-- elements
