@@ -17,6 +17,7 @@ Entity = {
 	inventory = {},
 	equipment = {},
 
+	is_equipment = false,
 	attack = 1,
 	attack_speed = 10,
 	defense = 0,
@@ -69,7 +70,7 @@ Entity = {
 
 	satiety = 100,
 	nourishment = 10,
-	is_food = true,
+	is_edible = false,
 	metabolic_rate = 1,
 	
 	stamina = 100,
@@ -266,7 +267,7 @@ Entity = {
 		print("Equip beginning")
 		if #self.equipment < 6 then
  			for k,v in pairs(self.inventory) do
-				if v == item then
+				if v == item and v.is_equipment then
 					print("Equipping "..v.name)
 					table.insert(self.equipment, v)
 					table.remove(self.inventory, k)
@@ -274,7 +275,9 @@ Entity = {
 					self.attack = self.attack + v.attack
 					self.attack_speed = self.attack_speed + v.attack_speed
 					self.defense = self.defense + v.defense
-					self.move_speed = self.speed + v.move_speed
+					self.move_speed = self.move_speed + v.move_speed
+				elseif v == item then
+					print("You can't equip that!")
 				end
 			end
 			query_substate = nil
@@ -292,11 +295,9 @@ Entity = {
 				table.insert(self.inventory, v)
 				table.remove(self.equipment, k)
 				print("Unequip is subtracting stats")
-				print("pre-unequip stats: "..self.attack..", "..self.defense..", "..self.move_speed)
 				self.attack = self.attack - v.attack
 				self.defense = self.defense - v.defense
-				self.move_speed = self.speed - v.speed
-				print("post-unequip: "..self.attack..", "..self.defense..", "..self.move_speed)
+				self.move_speed = self.move_speed - v.move_speed
 			end
 		end
 		query_substate = nil
@@ -371,16 +372,22 @@ Entity = {
 	Eat = function(self, target, eat_type)
 		if eat_type == "world" then
 			target:Die()
+			self.satiety = self.satiety + target.nourishment
+			print(self.name.." eats "..target.name)
 		elseif eat_type == "inventory" then
 			for k,v in pairs(self.inventory) do
 				if v == target then
-					table.remove(self.inventory, k)
+					if v.is_edible then
+						table.remove(self.inventory, k)
+						self.satiety = self.satiety + target.nourishment
+						print(self.name.." eats "..target.name)
+					else
+						print("You can't eat that!")
+					end
 				end
 			end
 			query_substate = nil
 		end
-		self.satiety = self.satiety + target.nourishment
-		print(self.name.." eats "..target.name)
 	end,
 
 	GetClosestEntity = function(self)

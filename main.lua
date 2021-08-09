@@ -425,7 +425,8 @@ function love.update(dt)
 
 	-- changes over time
 	while spawn_timer > 20 do
-		tools.ElementalSpawn()
+		tools.ElementalSpawn("item")
+		tools.ElementalSpawn("mob")
 		spawn_timer = spawn_timer - 20
 	end
 

@@ -53,35 +53,37 @@ local tools = {
 		end
 	end,
 
-	ElementalSpawn = function()
-		local threshold1 = 10
-		local threshold2 = 20
+	ElementalSpawn = function(entity_type)
+		local mob_threshold = 20
+		local item_threshold = 20
 
-		if current_map.elemental_balance.fire > threshold1 then
+		if current_map.elemental_balance.fire > mob_threshold and entity_type == "mob"then
 			tools.MakeEntities(mob_db.goblin, 1)
-		elseif current_map.elemental_balance.fire > threshold2 then
-			
+		elseif current_map.elemental_balance.fire > item_threshold and entity_type == "item" then
+			tools.MakeEntities(item_db.fire_glyph, 1)
 		end
 
-		if current_map.elemental_balance.earth > threshold1 then
+		if current_map.elemental_balance.earth > mob_threshold and entity_type == "mob"then
 			tools.MakeEntities(mob_db.kobold, 1)
-		elseif current_map.elemental_balance.earth > threshold2 then
+		elseif current_map.elemental_balance.earth > item_threshold and entity_type == "item" then
 			tools.MakeEntities(item_db.cheeseburger, 1)
 		end
 
-		if current_map.elemental_balance.water > threshold1 then
+		if current_map.elemental_balance.water > mob_threshold and entity_type == "mob" then
 			tools.MakeEntities(mob_db.water_slime, 1)
-		elseif current_map.elemental_balance.water > threshold2 then
+		elseif current_map.elemental_balance.water > item_threshold and entity_type == "item" then
+			tools.MakeEntities(item_db.water_glyph, 1)
 		end
  
-		if current_map.elemental_balance.wood > threshold1 then
+		if current_map.elemental_balance.wood > mob_threshold and entity_type == "mob"then
 			tools.MakeEntities(mob_db.fairy, 1)
-		elseif current_map.elemental_balance.wood > threshold2 then
+		elseif current_map.elemental_balance.wood > item_threshold and entity_type == "item" then
+			tools.MakeEntities(item_db.wood_glyph, 1)
 		end
 		
-		if current_map.elemental_balance.metal > threshold1 then
+		if current_map.elemental_balance.metal > mob_threshold and entity_type == "mob"then
 			tools.MakeEntities(mob_db.robot, 1)
-		elseif current_map.elemental_balance.metal > threshold2 then
+		elseif current_map.elemental_balance.metal > item_threshold and entity_type == "item" then
 			tools.MakeEntities(item_db.rapier, 1)
 		end
 	end,
