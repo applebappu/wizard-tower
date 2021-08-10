@@ -448,6 +448,23 @@ Entity = {
 		self.turn_timer = self.turn_timer + (one_turn)
 		self.myTurn = false
 		tools.TimerTick()
+	end,
+
+	ElementalMetabolismTick = function(self)
+		local s = self.elemental_balance
+		local test = s.air - 0.5 * self.metabolic_rate
+
+		if test > 0 then
+			s.fire = s.fire + 0.1 * self.metabolic_rate
+			s.earth = s.earth + 0.1 * self.metabolic_rate
+			s.water = s.water + 0.1 * self.metabolic_rate
+			s.wood = s.wood + 0.1 * self.metabolic_rate
+			s.metal = s.metal + 0.1 * self.metabolic_rate
+			s.air = s.air - 0.5 * self.metabolic_rate
+			print("Elemental metabolism tick")
+		else
+			print("Elemental metabolism failed")
+		end
 	end
 }
 
