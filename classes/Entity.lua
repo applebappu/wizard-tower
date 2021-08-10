@@ -95,8 +95,7 @@ Entity = {
 	end,
 
 	Die = function(self)
-		for i = 1, #spawn_table do
-			local v = spawn_table[i]
+		for k,v in pairs(spawn_table) do
 			if v == self then
 				if v.entity_type ~= "Player" then
 					table.remove(spawn_table, k)
@@ -104,10 +103,6 @@ Entity = {
 	
 					local a = self.elemental_balance
 					current_map:InfuseElements(a.fire, a.earth, a.water, a.wood, a.metal, a.air)
-	
-					for k,v in pairs(current_map.elemental_balance) do
-						print(k,v)
-					end
 	
 					for i = 1, #self.inventory do
 						self:Drop(self.inventory[i])
@@ -188,7 +183,7 @@ Entity = {
 			self.position.x = self.position.x + dx
 			self.position.y = self.position.y + dy
 
-			self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
+			self.turn_timer = self.turn_timer + (one_turn * self.move_speed)
 			self.turn_counter = self.turn_counter + 1
 			self.myTurn = false
 
@@ -301,7 +296,7 @@ Entity = {
 		self.exercise_strength = self.exercise_strength + 1
 		print(self.name.." exercised strength")
 
-		self.turn_timer = self.turn_timer + (one_turn / self.attack_speed)
+		self.turn_timer = self.turn_timer + (one_turn * self.attack_speed)
 		self.myTurn = false
 		self.turn_counter = self.turn_counter + 1
 		tools.TimerTick()

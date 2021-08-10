@@ -24,7 +24,7 @@ tower_height = 1
 
 souls = 0
 
-one_turn = 100
+one_turn = 10
 
 spawn_timer = 0
 element_timer = 0
@@ -409,9 +409,10 @@ function love.update(dt)
 	end
 
 	-- changes over time
-	while spawn_timer > 20 do
-		tools.ElementalSpawn("item")
-		tools.ElementalSpawn("mob")
+	if spawn_timer >= 6 then
+		
+		tools.ElementalSpawn("item", 10, 1)
+		tools.ElementalSpawn("mob", 10, 1)
 
 		local p = mob_db.Player
 		local dice = math.random(0,100)
@@ -431,13 +432,13 @@ function love.update(dt)
 			p.mind = p.mind + 1
 		end
 
-		spawn_timer = spawn_timer - 20
+		spawn_timer = 0
 	end
 
-	while element_timer > 5 do
+	if element_timer >= 5 then
 		current_map:TileElements()
 		mob_db.Player:ElementalMetabolismTick()
 
-		element_timer = element_timer - 5
+		element_timer = 0
 	end
 end

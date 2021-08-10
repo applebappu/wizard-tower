@@ -43,25 +43,44 @@ item_db.air_glyph.name = "air glyph"
 item_db.food = tools.CopyTable(Entity)
 item_db.food.char = "%"
 item_db.food.element = "earth"
-item_db.food.elemental_balance.earth = 5
+item_db.food.elemental_balance.earth = 10
 item_db.food.is_edible = true
 
 item_db.cheeseburger = tools.CopyTable(item_db.food)
 item_db.cheeseburger.name = "cheeseburger"
-item_db.cheeseburger.nourishment = 50
+item_db.cheeseburger.nourishment = 20
 
 -- WEAPONS --
 item_db.weapon = tools.CopyTable(Entity)
 item_db.weapon.char = "/"
-item_db.weapon.element = "metal"
-item_db.weapon.elemental_balance.metal = 5
 item_db.weapon.is_equipment = true
 
 item_db.rapier = tools.CopyTable(item_db.weapon)
 item_db.rapier.name = "rapier"
 item_db.rapier.attack = 2
 item_db.rapier.defense = 1
-item_db.rapier.attack_speed = 5
+item_db.rapier.attack_speed = 1.1
+item_db.rapier.element = "metal"
+item_db.rapier.elemental_balance.metal = 20
+
+item_db.staff = tools.CopyTable(item_db.weapon)
+item_db.staff.name = "staff"
+item_db.staff.attack = 1
+item_db.staff.defense = 2
+item_db.staff.attack_speed = 0.9
+item_db.staff.element = "wood"
+item_db.staff.elemental_balance.wood = 20
+
+-- ARMOR --
+item_db.armor = tools.CopyTable(Entity)
+item_db.armor.char = "&"
+item_db.armor.element = "earth"
+item_db.armor.elemental_balance.earth = 20
+item_db.armor.is_equipment = true
+
+item_db.fancy_hat = tools.CopyTable(item_db.weapon)
+item_db.fancy_hat.name = "fancy hat"
+item_db.fancy_hat.defense = 1
 
 for k,v in pairs(item_db) do
 	v.entity_type = "item"

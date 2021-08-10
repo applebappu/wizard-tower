@@ -45,46 +45,44 @@ local tools = {
 		
 		for i = 1, iterations do
 			mobs[i] = tools.CopyTable(target)
+
+			math.randomseed(os.time() - (os.clock() * 1000))
 			mobs[i].position.x = math.random(3,36)
 			mobs[i].position.y = math.random(3,18)
 		end
 		for i = 1, #mobs do
+			print("spawning "..mobs[i].name)
 			mobs[i]:Spawn()
 		end
 	end,
 
-	ElementalSpawn = function(entity_type)
-		local mob_threshold = 20
-		local item_threshold = 20
+	ElementalSpawn = function(entity_type, threshold, number_to_make)
+		local elem = current_map.elemental_balance
 
-		if current_map.elemental_balance.fire > mob_threshold and entity_type == "mob"then
-			tools.MakeEntities(mob_db.goblin, 1)
-		elseif current_map.elemental_balance.fire > item_threshold and entity_type == "item" then
-			tools.MakeEntities(item_db.fire_glyph, 1)
-		end
-
-		if current_map.elemental_balance.earth > mob_threshold and entity_type == "mob"then
-			tools.MakeEntities(mob_db.kobold, 1)
-		elseif current_map.elemental_balance.earth > item_threshold and entity_type == "item" then
-			tools.MakeEntities(item_db.cheeseburger, 1)
-		end
-
-		if current_map.elemental_balance.water > mob_threshold and entity_type == "mob" then
-			tools.MakeEntities(mob_db.water_slime, 1)
-		elseif current_map.elemental_balance.water > item_threshold and entity_type == "item" then
-			tools.MakeEntities(item_db.water_glyph, 1)
-		end
- 
-		if current_map.elemental_balance.wood > mob_threshold and entity_type == "mob"then
-			tools.MakeEntities(mob_db.fairy, 1)
-		elseif current_map.elemental_balance.wood > item_threshold and entity_type == "item" then
-			tools.MakeEntities(item_db.wood_glyph, 1)
-		end
-		
-		if current_map.elemental_balance.metal > mob_threshold and entity_type == "mob"then
-			tools.MakeEntities(mob_db.robot, 1)
-		elseif current_map.elemental_balance.metal > item_threshold and entity_type == "item" then
-			tools.MakeEntities(item_db.rapier, 1)
+		if entity_type == "mob" then
+			if elem.fire >= threshold then
+				tools.MakeEntities(mob_db.goblin, number_to_make)
+			elseif elem.earth >= threshold then
+				tools.MakeEntities(mob_db.kobold, number_to_make)
+			elseif elem.water >= threshold then
+				tools.MakeEntities(mob_db.water_slime, number_to_make)
+			elseif elem.wood >= threshold then
+				tools.MakeEntities(mob_db.fairy, number_to_make)
+			elseif elem.metal >= threshold then
+				tools.MakeEntities(mob_db.robot, number_to_make)
+			end
+		elseif entity_type == "item" then
+			if elem.fire >= threshold then
+				tools.MakeEntities(item_db.fire_glyph, number_to_make)
+			elseif elem.earth >= threshold then
+				tools.MakeEntities(item_db.cheeseburger, number_to_make)
+			elseif elem.water >= threshold then
+				tools.MakeEntities(item_db.water_glyph, number_to_make)
+			elseif elem.wood >= threshold then
+				tools.MakeEntities(item_db.wood_glyph, number_to_make)
+			elseif elem.metal >= threshold then
+				tools.MakeEntities(item_db.rapier, number_to_make)
+			end
 		end
 	end,
 
@@ -129,7 +127,6 @@ local tools = {
 				love.graphics.print(v.char, v.position.x * current_map.tile_size, v.position.y * current_map.tile_size)
 			end
 		end
-
 	end
 }
 
