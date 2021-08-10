@@ -201,10 +201,6 @@ Entity = {
 		end
 	end,
 
-	MakeNoise = function(self, amount)
-
-	end,
-
 	Wander = function(self)
 		local r1 = math.random(-1, 1)
 		local r2 = math.random(-1, 1)
@@ -285,6 +281,10 @@ Entity = {
 		else
 			print("equipment full")
 		end
+
+		self.turn_timer = self.turn_timer + (one_turn)
+		self.myTurn = false
+		tools.TimerTick()
 	end,
 
 	Unequip = function(self, item)
@@ -302,11 +302,16 @@ Entity = {
 		end
 		query_substate = nil
 		print("Unequip ended")
+		
+		self.turn_timer = self.turn_timer + (one_turn)
+		self.myTurn = false
+		tools.TimerTick()
 	end,
 
 	Bump = function(self, target)
 		target:ChangeHP(-self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
+
 		self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
 		self.myTurn = false
 		self.turn_counter = self.turn_counter + 1
@@ -388,6 +393,10 @@ Entity = {
 			end
 			query_substate = nil
 		end
+
+		self.turn_timer = self.turn_timer + (one_turn)
+		self.myTurn = false
+		tools.TimerTick()
 	end,
 
 	GetClosestEntity = function(self)
@@ -436,7 +445,7 @@ Entity = {
 		else
 			print(self.name.." tries to meditate, but fails")
 		end
-		self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
+		self.turn_timer = self.turn_timer + (one_turn)
 		self.myTurn = false
 		tools.TimerTick()
 	end
