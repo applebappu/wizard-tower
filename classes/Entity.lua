@@ -191,6 +191,9 @@ Entity = {
 			self.myTurn = false
 
 			self.satiety = self.satiety - (0.1 * self.metabolic_rate)
+			if self.satiety <= 0 then
+				self:Die()
+			end
 
 			if self.name == "Player" then 
 				tools.TimerTick()
@@ -420,6 +423,7 @@ Entity = {
 
 	GetDirectionToEntity = function(self, target)
 		local entity = nil
+		local step_to_take = {x = 0, y = 0}
 
 		for k,v in pairs(spawn_table) do
 			if v.name == target.name then
@@ -429,7 +433,7 @@ Entity = {
 
 		local direction = bresenham.line(self.position.x, self.position.y, entity.position.x, entity.position.y, "direction")
 
-		local step_to_take = {
+		step_to_take = {
 			x = direction.x - self.position.x,
 			y = direction.y - self.position.y
 		}

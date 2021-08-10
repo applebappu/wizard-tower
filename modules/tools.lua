@@ -106,6 +106,30 @@ local tools = {
 		spawn_timer = spawn_timer + 1
 		element_timer = element_timer + 1
 		global_timer = global_timer + 1	
+	end,
+
+	DrawEntities = function(entity_types)
+		for k,v in pairs(spawn_table) do
+			if mob_db.Player:DistToEntity(v) <= mob_db.Player.sight_dist and mob_db.Player:LineOfSight(v.position.x, v.position.y) and v.entity_type == entity_types then
+				love.graphics.setColor(0,0,0)
+				love.graphics.rectangle("fill", v.position.x * current_map.tile_size, v.position.y * current_map.tile_size, current_map.tile_size, current_map.tile_size)
+				if v.element == "fire" then
+					love.graphics.setColor(255/255,0/255,0/255)
+				elseif v.element == "water" then
+					love.graphics.setColor(0/255,100/255,255/255)
+				elseif v.element == "wood" then
+					love.graphics.setColor(0/255,255/255,100/255)
+				elseif v.element == "metal" then
+					love.graphics.setColor(201/255,247/255,238/255)
+				elseif v.element == "earth" then
+					love.graphics.setColor(165/255,42/255,42/255)
+				elseif v.element == "air" then
+					love.graphics.setColor(100/255,255/255,255/255)
+				end
+				love.graphics.print(v.char, v.position.x * current_map.tile_size, v.position.y * current_map.tile_size)
+			end
+		end
+
 	end
 }
 
