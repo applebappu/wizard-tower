@@ -412,20 +412,7 @@ function love.update(dt)
 	while spawn_timer > 20 do
 		tools.ElementalSpawn("item")
 		tools.ElementalSpawn("mob")
-		spawn_timer = spawn_timer - 20
-	end
 
-	while element_timer > 5 do
-		current_map:TileElements()
-		element_timer = element_timer - 5
-	end
-
-	-- elemental metabolism
-	local x1 = global_timer - 100
-	mob_db.Player:ElementalMetabolismTick()
-
-	-- stat increases
-	if x1 == 1 then
 		local p = mob_db.Player
 		local dice = math.random(0,100)
 		if dice < p.exercise_strength then
@@ -443,5 +430,14 @@ function love.update(dt)
 		if dice < p.exercise_mind then
 			p.mind = p.mind + 1
 		end
+
+		spawn_timer = spawn_timer - 20
+	end
+
+	while element_timer > 5 do
+		current_map:TileElements()
+		mob_db.Player:ElementalMetabolismTick()
+
+		element_timer = element_timer - 5
 	end
 end

@@ -19,9 +19,9 @@ Entity = {
 
 	is_equipment = false,
 	attack = 1,
-	attack_speed = 10,
+	attack_speed = 1,
 	defense = 0,
-	move_speed = 10,
+	move_speed = 1,
 
 	strength = 1,
 	exercise_strength = 0,
@@ -95,7 +95,8 @@ Entity = {
 	end,
 
 	Die = function(self)
-		for k, v in pairs(spawn_table) do
+		for i = 1, #spawn_table do
+			local v = spawn_table[i]
 			if v == self then
 				if v.entity_type ~= "Player" then
 					table.remove(spawn_table, k)
@@ -108,8 +109,8 @@ Entity = {
 						print(k,v)
 					end
 	
-					for k,v in pairs(self.inventory) do
-						self:Drop("all")
+					for i = 1, #self.inventory do
+						self:Drop(self.inventory[i])
 					end
 				else
 					game_state = "game over"
@@ -158,7 +159,8 @@ Entity = {
 		local test_y = self.position.y + dy
 		local test_value = true
 		
-		for k, v in pairs(spawn_table) do
+		for i = 1, #spawn_table do
+			local v = spawn_table[i]
 			if test_x == v.position.x and test_y == v.position.y and v ~= self then
 				if v.entity_type == "mob" or v.entity_type == "Player" then
 					print("canMove says Bump!")
@@ -198,6 +200,7 @@ Entity = {
 			if self.name == "Player" then 
 				tools.TimerTick()
 			end
+
 			print("move complete for "..self.name)
 		elseif self.myTurn then
 			
@@ -212,7 +215,8 @@ Entity = {
 
 	Pickup = function(self)
 		local target = nil
-		for k,v in pairs(spawn_table) do
+		for i = 1, #spawn_table do
+			local v = spawn_table[i]
 			if v.position.x == self.position.x and v.position.y == self.position.y then
 				if v ~= self then
 					target = v
@@ -229,36 +233,22 @@ Entity = {
 		else
 			print(self.name.." inventory full")
 		end
-
-		self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
-		self.myTurn = false
-		tools.TimerTick()
 	end,
 
 	Drop = function(self, target)
-		if target == "all" then
-			for k,v in pairs(self.inventory) do
+		for i = 1, #self.inventory do
+			local v = self.inventory[i]
+			if v == target then
 				table.remove(self.inventory, k)
 				target.position = {
 					x = self.position.x,
 					y = self.position.y
 				}
-				v:Spawn()
-			end
-		else
-			for k, v in pairs(self.inventory) do
-				if v == target then
-					table.remove(self.inventory, k)
-					target.position = {
-						x = self.position.x,
-						y = self.position.y
-					}
-					target:Spawn()
-				end
+				target:Spawn()
 			end
 		end
+
 		query_substate = nil
-		tools.TimerTick()
 		print(self.name.." dropped "..target.name)
 	end,
 
@@ -284,15 +274,12 @@ Entity = {
 		else
 			print("equipment full")
 		end
-
-		self.turn_timer = self.turn_timer + (one_turn)
-		self.myTurn = false
-		tools.TimerTick()
 	end,
 
 	Unequip = function(self, item)
 		print("Unequip beginning")
-		for k,v in pairs(self.equipment) do
+		for i = 1, #self.equipment do
+			local v = self.equipment[i]
 			if v == item then
 				print("Unequipping "..v.name)
 				table.insert(self.inventory, v)
@@ -305,17 +292,16 @@ Entity = {
 		end
 		query_substate = nil
 		print("Unequip ended")
-		
-		self.turn_timer = self.turn_timer + (one_turn)
-		self.myTurn = false
-		tools.TimerTick()
 	end,
 
 	Bump = function(self, target)
 		target:ChangeHP(-self.attack)
 		print(target.name .. "'s HP is now "..target.hp_current)
 
-		self.turn_timer = self.turn_timer + (one_turn / self.move_speed)
+		self.exercise_strength = self.exercise_strength + 1
+		print(self.name.." exercised strength")
+
+		self.turn_timer = self.turn_timer + (one_turn / self.attack_speed)
 		self.myTurn = false
 		self.turn_counter = self.turn_counter + 1
 		tools.TimerTick()
@@ -377,29 +363,20 @@ Entity = {
 		return true
 	end,
 
-	Eat = function(self, target, eat_type)
-		if eat_type == "world" then
-			target:Die()
-			self.satiety = self.satiety + target.nourishment
-			print(self.name.." eats "..target.name)
-		elseif eat_type == "inventory" then
-			for k,v in pairs(self.inventory) do
-				if v == target then
-					if v.is_edible then
-						table.remove(self.inventory, k)
-						self.satiety = self.satiety + target.nourishment
-						print(self.name.." eats "..target.name)
-					else
-						print("You can't eat that!")
-					end
+	Eat = function(self, target)
+		for i = 1, #self.inventory do
+			local v = self.inventory[i]
+			if v == target then
+				if v.is_edible then
+					table.remove(self.inventory, k)
+					self.satiety = self.satiety + target.nourishment
+					print(self.name.." eats "..target.name)
+				else
+					print("You can't eat that!")
 				end
 			end
-			query_substate = nil
 		end
-
-		self.turn_timer = self.turn_timer + (one_turn)
-		self.myTurn = false
-		tools.TimerTick()
+		query_substate = nil
 	end,
 
 	GetClosestEntity = function(self)
