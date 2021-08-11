@@ -1,3 +1,5 @@
+-- BUG: mobs sometimes just don't move or rest once spawned (seems to only happen when a mob moves into a wall)
+
 -- requires
 bresenham = require "modules.bresenham"
 item_db = require "modules.item_db"
@@ -319,12 +321,14 @@ function love.draw()
 		love.graphics.print("Water: "..mob_db.Player.elemental_balance.water.."/"..mob_db.Player.elemental_max.water, ts, ts * 26)
 		love.graphics.print("Metal: "..mob_db.Player.elemental_balance.metal.."/"..mob_db.Player.elemental_max.metal, ts, ts * 27)
 		love.graphics.print("Air: "..mob_db.Player.elemental_balance.air.."/"..mob_db.Player.elemental_max.air, ts, ts * 28)
+
 		-- stats
 		love.graphics.print("Strength: "..mob_db.Player.strength, ts * 12, ts * 22)
 		love.graphics.print("Toughness: "..mob_db.Player.toughness, ts * 12, ts * 23)
 		love.graphics.print("Concentration: "..mob_db.Player.concentration, ts * 12, ts * 24)
 		love.graphics.print("Mobility: "..mob_db.Player.concentration, ts * 12, ts * 25)
 		love.graphics.print("Mind: "..mob_db.Player.concentration, ts * 12, ts * 26)
+
 		-- tower level and misc (satiety, stam, etc)
 		love.graphics.print("Tower Level: "..tower_level, ts * 24, ts * 22)
 		if mob_db.Player.satiety == 125 then
@@ -376,7 +380,7 @@ end
 function love.update(dt)
 	-- basic "AI"
 	for k,v in pairs(spawn_table) do
-		if v.myTurn and v.entity_type == "mob" then
+		if v.myTurn and v.entity_type == "mob" then 
 			if math.random(0,1) >= v.lumpiness then
 				if v:LineOfSight(mob_db.Player.position.x, mob_db.Player.position.y) then
 					local step = v:GetDirectionToEntity(mob_db.Player)
@@ -397,12 +401,11 @@ function love.update(dt)
 		if v.myTurn == false then
 			v.turn_timer = v.turn_timer - 1
 		end
-		for k, v in pairs(spawn_table) do
+		for i = 1, #spawn_table do
+			local v = spawn_table[i]
 			if v.turn_timer <= 0 then
 				v.turn_timer = 0
 				v.myTurn = true
-				if v.name == "Player" then
-				end
 				break
 			end
 		end
@@ -411,25 +414,30 @@ function love.update(dt)
 	-- changes over time
 	if spawn_timer >= 6 then
 		
-		tools.ElementalSpawn("item", 10, 1)
-		tools.ElementalSpawn("mob", 10, 1)
+		tools.ElementalSpawn("item", 50, 1)
+		tools.ElementalSpawn("mob", 20, 1)
 
 		local p = mob_db.Player
 		local dice = math.random(0,100)
 		if dice < p.exercise_strength then
 			p.strength = p.strength + 1
+			p.exercise_strength = 0
 		end
 		if dice < p.exercise_toughness then
 			p.toughness = p.toughness + 1
+			p.exercise_toughness = 0
 		end
 		if dice < p.exercise_concentration then
 			p.concentration = p.concentration + 1
+			p.exercise_concentration = 0
 		end
 		if dice < p.exercise_mobility then
 			p.mobility = p.mobility + 1
+			p.exercise_mobility = 0
 		end
 		if dice < p.exercise_mind then
 			p.mind = p.mind + 1
+			p.exercise_mind = 0
 		end
 
 		spawn_timer = 0

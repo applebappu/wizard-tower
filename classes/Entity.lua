@@ -197,8 +197,8 @@ Entity = {
 			end
 
 			print("move complete for "..self.name)
-		elseif self.myTurn then
-			
+		elseif t == false and self.myTurn then
+			self:Rest()
 		end
 	end,
 
@@ -365,6 +365,17 @@ Entity = {
 				if v.is_edible then
 					table.remove(self.inventory, k)
 					self.satiety = self.satiety + target.nourishment
+					if v.is_equipment then
+						local s_elem = self.elemental_max
+						local t_elem = v.elemental_balance
+
+						s_elem.fire = s_elem.fire + t_elem.fire/10
+						s_elem.earth = s_elem.earth + t_elem.earth/10
+						s_elem.water = s_elem.water + t_elem.water/10
+						s_elem.wood = s_elem.wood + t_elem.wood/10
+						s_elem.metal = s_elem.metal + t_elem.metal/10
+						s_elem.air = s_elem.air + t_elem.air/10
+					end
 					print(self.name.." eats "..target.name)
 				else
 					print("You can't eat that!")

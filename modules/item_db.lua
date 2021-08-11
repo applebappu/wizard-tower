@@ -8,6 +8,8 @@ item_db.glyph = tools.CopyTable(Entity)
 item_db.glyph.name = "glyph"
 item_db.glyph.char = "%"
 item_db.glyph.is_equipment = true
+item_db.glyph.is_edible = true
+item_db.glyph.nourishment = 0
 
 item_db.fire_glyph = tools.CopyTable(item_db.glyph)
 item_db.fire_glyph.element = "fire"
