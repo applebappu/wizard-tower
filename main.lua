@@ -1,5 +1,3 @@
--- BUG: mobs sometimes just don't move or rest once spawned (seems to only happen when a mob moves into a wall)
-
 -- requires
 bresenham = require "modules.bresenham"
 item_db = require "modules.item_db"
@@ -29,7 +27,9 @@ souls = 0
 one_turn = 10
 
 spawn_timer = 0
+spawn_tick = 5
 element_timer = 0
+element_tick = 5
 global_timer = 0
 
 game_state = "main"
@@ -359,8 +359,17 @@ function love.draw()
 
 	elseif game_state == "inventory" then
 		love.graphics.setColor(255,255,255)
-		mob_db.Player:DrawInventory()
-		mob_db.Player:DrawEquipment()
+		love.graphics.print("Inventory:", current_map.tile_size, current_map.tile_size)
+		for k,v in ipairs(mod_db.Player.inventory) do
+			love.graphics.print(k.." - ", current_map.tile_size, (k + 1) * current_map.tile_size)
+			love.graphics.print(mod_db.Player.inventory[k].name, 4 * current_map.tile_size, (k + 1) * current_map.tile_size)
+		end
+
+		love.graphics.print("Equipment:", 20 * current_map.tile_size, current_map.tile_size)
+		for k,v in ipairs(mob_db.Player.equipment) do
+			love.graphics.print(k.." - ", 20 * current_map.tile_size, (k + 1) * current_map.tile_size)
+			love.graphics.print(mob_db.Player.equipment[k].name, 24 * current_map.tile_size, (k + 1) * current_map.tile_size)
+		end
 
 		if query_substate == "equip" then
 			love.graphics.print("Equip which item?", current_map.tile_size, 20 * current_map.tile_size)
@@ -385,19 +394,24 @@ function love.update(dt)
 				if v:LineOfSight(mob_db.Player.position.x, mob_db.Player.position.y) then
 					local step = v:GetDirectionToEntity(mob_db.Player)
 					v:Move(step.x, step.y)
+					print(v.name.." saw Player and moved towards them")
 				else
 					v:Wander()
+					print(v.name.." is wandering, can't see player")
 				end
 			else
 				v:Rest()
+				print(v.name.." is too lumpy to move")
 			end
 		elseif v.myTurn and v.entity_type == "item" then
 			v:Rest()
+			print(v.name.." is resting because it is an item")
 		end
 	end
 
 	-- increment turns
-	for k,v in pairs(spawn_table) do
+	for i = 1, #spawn_table do
+		local v = spawn_table[i]
 		if v.myTurn == false then
 			v.turn_timer = v.turn_timer - 1
 		end
@@ -412,7 +426,7 @@ function love.update(dt)
 	end
 
 	-- changes over time
-	if spawn_timer >= 6 then
+	if spawn_timer >= spawn_tick then
 		
 		tools.ElementalSpawn("item", 50, 1)
 		tools.ElementalSpawn("mob", 20, 1)
@@ -420,12 +434,18 @@ function love.update(dt)
 		local p = mob_db.Player
 		local dice = math.random(0,100)
 		if dice < p.exercise_strength then
+			p.attack = p.attack - p.strength
 			p.strength = p.strength + 1
 			p.exercise_strength = 0
+			print("Player strength up")
+			p.attack = p.attack + p.strength
 		end
 		if dice < p.exercise_toughness then
+			p.defense = p.defense - p.toughness
 			p.toughness = p.toughness + 1
 			p.exercise_toughness = 0
+			print("Player toughness up")
+			p.defense = p.defense + p.toughness
 		end
 		if dice < p.exercise_concentration then
 			p.concentration = p.concentration + 1
@@ -443,7 +463,7 @@ function love.update(dt)
 		spawn_timer = 0
 	end
 
-	if element_timer >= 5 then
+	if element_timer >= element_tick then
 		current_map:TileElements()
 		mob_db.Player:ElementalMetabolismTick()
 

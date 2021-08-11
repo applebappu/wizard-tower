@@ -12,7 +12,6 @@ Entity = {
 
 	turn_timer = 0,
 	myTurn = false,
-	turn_counter = 1,
 
 	inventory = {},
 	equipment = {},
@@ -184,7 +183,6 @@ Entity = {
 			self.position.y = self.position.y + dy
 
 			self.turn_timer = self.turn_timer + (one_turn * self.move_speed)
-			self.turn_counter = self.turn_counter + 1
 			self.myTurn = false
 
 			self.satiety = self.satiety - (0.1 * self.metabolic_rate)
@@ -199,6 +197,7 @@ Entity = {
 			print("move complete for "..self.name)
 		elseif t == false and self.myTurn then
 			self:Rest()
+			print(self.name.." could not move, and rested instead")
 		end
 	end,
 
@@ -206,6 +205,7 @@ Entity = {
 		local r1 = math.random(-1, 1)
 		local r2 = math.random(-1, 1)
 		self:Move(r1, r2)
+		print(self.name.." wandered")
 	end,
 
 	Pickup = function(self)
@@ -283,6 +283,7 @@ Entity = {
 				self.attack = self.attack - v.attack
 				self.defense = self.defense - v.defense
 				self.move_speed = self.move_speed - v.move_speed
+				self.attack_speed = self.attack_speed - v.attack_speed
 			end
 		end
 		query_substate = nil
@@ -295,29 +296,13 @@ Entity = {
 
 		self.exercise_strength = self.exercise_strength + 1
 		print(self.name.." exercised strength")
+			
+		target.exercise_toughness = target.exercise_toughness + 1
+		print(target.name.." exercised toughness")
 
 		self.turn_timer = self.turn_timer + (one_turn * self.attack_speed)
 		self.myTurn = false
-		self.turn_counter = self.turn_counter + 1
 		tools.TimerTick()
-	end,
-
-	DrawInventory = function(self)
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Inventory:", current_map.tile_size, current_map.tile_size)
-		for k,v in ipairs(self.inventory) do
-			love.graphics.print(k.." - ", current_map.tile_size, (k + 1) * current_map.tile_size)
-			love.graphics.print(self.inventory[k].name, 4 * current_map.tile_size, (k + 1) * current_map.tile_size)
-		end
-	end,
-
-	DrawEquipment = function(self)
-		love.graphics.setColor(255,255,255)
-		love.graphics.print("Equipment:", 20 * current_map.tile_size, current_map.tile_size)
-		for k,v in ipairs(self.equipment) do
-			love.graphics.print(k.." - ", 20 * current_map.tile_size, (k + 1) * current_map.tile_size)
-			love.graphics.print(self.equipment[k].name, 24 * current_map.tile_size, (k + 1) * current_map.tile_size)
-		end
 	end,
 	
 	Rest = function(self)
@@ -325,7 +310,6 @@ Entity = {
 		self.myTurn = false
 		self.stamina = self.stamina + 10
 		self.satiety = self.satiety - 1
-		self.turn_counter = self.turn_counter + 1
 		print(self.name.." rests")
 	end,
 
