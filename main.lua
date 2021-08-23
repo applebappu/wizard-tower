@@ -35,6 +35,15 @@ global_timer = 0
 game_state = "main"
 query_substate = nil
 
+cursor = {
+	position = {
+		x = 1,
+		y = 1
+	},
+	blink_timer = 0.25,
+	visible = false 
+}
+
 -- init
 math.randomseed(os.time() - (os.clock() * 1000))
 
@@ -89,7 +98,7 @@ function love.keyreleased(k)
 		elseif k == "m" then
 			mob_db.Player:Meditate()
 		elseif k == "b" then
-			-- spellbook
+			game_state = "spellbook"
 		end
 		
 		-- changing levels
@@ -145,101 +154,39 @@ function love.keyreleased(k)
 	end
 
 	if game_state == "inventory" then
-		if k == "e" and query_substate == nil then
-			query_substate = "equip"
-		elseif k == "u" and query_substate == nil then
-			query_substate = "unequip"
-		elseif k == "d" and query_substate == nil then
-			query_substate = "drop"
-		elseif k == "c" and query_substate == nil then
-			query_substate = "consume"
-		end
-	end
-	
-	if game_state == "inventory" and query_substate == "equip" then
-		local b = mob_db.Player
-		if k == "1" then
-			local a = 1
-			b:Equip(b.inventory[a])
-		elseif k == "2" then
-			local a = 2
-			b:Equip(b.inventory[a])
-		elseif k == "3" then
-			local a = 3
-			b:Equip(b.inventory[a])
-		elseif k == "4" then
-			local a = 4
-			b:Equip(b.inventory[a])
-		elseif k == "5" then
-			local a = 5
-			b:Equip(b.inventory[a])
-		elseif k == "6" then
-			local a = 6
-			b:Equip(b.inventory[a])
-		end
+		if query_substate == nil then
+			cursor.visible = false
+			if k == "e" then
+				query_substate = "equip"
+			elseif k == "u" then
+				query_substate = "unequip"
+			elseif k == "d" then
+				query_substate = "drop"
+			elseif k == "c" then
+				query_substate = "consume"
+			end
+		else
+			cursor.visible = true
+			local a = mob_db.Player
+			if k == "enter" then
+				if query_substate == "equip" then
+			
+				elseif query_substate == "unequip" then
 
-	elseif game_state == "inventory" and query_substate == "unequip" then
-		local b = mob_db.Player
-		if k == "1" then
-			local a = 1
-			b:Unequip(b.equipment[a])
-		elseif k == "2" then
-			local a = 2
-			b:Unequip(b.equipment[a])
-		elseif k == "3" then
-			local a = 3
-			b:Unequip(b.equipment[a])
-		elseif k == "4" then
-			local a = 4
-			b:Unequip(b.equipment[a])
-		elseif k == "5" then
-			local a = 5
-			b:Unequip(b.equipment[a])
-		elseif k == "6" then
-			local a = 6
-			b:Unequip(b.equipment[a])
-		end
-	elseif game_state == "inventory" and query_substate == "drop" then
-		local b = mob_db.Player
-		if k == "1" then
-			local a = 1
-			b:Drop(b.inventory[a])
-		elseif k == "2" then
-			local a = 2
-			b:Drop(b.inventory[a])
-		elseif k == "3" then
-			local a = 3
-			b:Drop(b.inventory[a])
-		elseif k == "4" then
-			local a = 4
-			b:Drop(b.inventory[a])
-		elseif k == "5" then
-			local a = 5
-			b:Drop(b.inventory[a])
-		elseif k == "6" then
-			local a = 6
-			b:Drop(b.inventory[a])
-		end
-	elseif game_state == "inventory" and query_substate == "consume" then
-		local b = mob_db.Player
-		if k == "1" then
-			local a = 1
-			b:Eat(b.inventory[a], "inventory")
-		elseif k == "2" then
-			local a = 2
-			b:Eat(b.inventory[a], "inventory")
-		elseif k == "3" then
-			local a = 3
-			b:Eat(b.inventory[a], "inventory")
-		elseif k == "4" then
-			local a = 4
-			b:Eat(b.inventory[a], "inventory")
-		elseif k == "5" then
-			local a = 5	
-			b:Eat(b.inventory[a], "inventory")
-		elseif k == "6" then
-			local a = 6	
-			b:Eat(b.inventory[a], "inventory")
+				elseif query_substate == "drop" then
+
+				elseif query_substate == "consume" then
+				
+				end
+			elseif k == "kp2" then
+				cursor.position.y = cursor.position.y + current_map.tile_size
+			elseif k == "kp8" then
+				cursor.position.y = cursor.position.y - current_map.tile_size
+			elseif k == "kp4" then
+
+			elseif k == "kp6" then
+
+			end
 		end
 	end
 end
@@ -358,9 +305,10 @@ function love.draw()
 		end
 
 	elseif game_state == "inventory" then
+		-- inventory and equipment --
 		love.graphics.setColor(255,255,255)
 		love.graphics.print("Inventory:", current_map.tile_size, current_map.tile_size)
-		for k,v in ipairs(mod_db.Player.inventory) do
+		for k,v in ipairs(mob_db.Player.inventory) do
 			love.graphics.print(k.." - ", current_map.tile_size, (k + 1) * current_map.tile_size)
 			love.graphics.print(mod_db.Player.inventory[k].name, 4 * current_map.tile_size, (k + 1) * current_map.tile_size)
 		end
@@ -371,6 +319,7 @@ function love.draw()
 			love.graphics.print(mob_db.Player.equipment[k].name, 24 * current_map.tile_size, (k + 1) * current_map.tile_size)
 		end
 
+		-- query substates --
 		if query_substate == "equip" then
 			love.graphics.print("Equip which item?", current_map.tile_size, 20 * current_map.tile_size)
 		elseif query_substate == "unequip" then
@@ -380,6 +329,13 @@ function love.draw()
 		elseif query_substate == "consume" then
 			love.graphics.print("Consume which item?", current_map.tile_size, 20 * current_map.tile_size)
 		end
+
+		-- cursor code --
+		if cursor.visible then
+			love.graphics.setColor(255,255,255)
+			love.graphics.rectangle("fill", 100, current_map.tile_size, cursor.position.x, cursor.position.y)
+		end
+
 	elseif game_state == "game over" then
 		love.graphics.setColor(255/255,0/255,0/255)
 		love.graphics.print("YOU DIED", 350, 200)
@@ -389,21 +345,37 @@ end
 function love.update(dt)
 	-- basic "AI"
 	for k,v in pairs(spawn_table) do
+		-- if it's your turn and you're a mob entity,
 		if v.myTurn and v.entity_type == "mob" then 
+			-- make sure they're not too lumpy to move
 			if math.random(0,1) >= v.lumpiness then
-				if v:LineOfSight(mob_db.Player.position.x, mob_db.Player.position.y) then
-					local step = v:GetDirectionToEntity(mob_db.Player)
-					v:Move(step.x, step.y)
-					print(v.name.." saw Player and moved towards them")
-				else
-					v:Wander()
-					print(v.name.." is wandering, can't see player")
+				for t = 1, #spawn_table do
+					-- can you see an entity that isn't you?
+					if spawn_table[t] ~= v and v:LineOfSight(spawn_table[t].position.x, spawn_table[t].position.y) then
+						-- are you standing on it (i.e. an item)?
+						if v:DistToEntity(spawn_table[t]) == 0 then
+							-- is it food?
+							-- if not, are you something with hands?
+								-- are you holding something else already?
+									-- if not, equip it
+						else 
+							-- go towards the entity
+							local step = v:GetDirectionToEntity(spawn_table[t])
+							v:Move(step.x, step.y)
+							print(v.name.." saw "..spawn_table[t].name.." and moved towards them")
+						end
+					else
+						v:Wander()
+						print(v.name.." is wandering")
+					end
 				end
 			else
 				v:Rest()
-				print(v.name.." is too lumpy to move")
+				print(v.name.." is resting")
 			end
+		-- if it's your turn and you're an item entity,
 		elseif v.myTurn and v.entity_type == "item" then
+			-- just chill
 			v:Rest()
 			print(v.name.." is resting because it is an item")
 		end
